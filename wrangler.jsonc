@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "latihan-cpns",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "latihan-cpns",
+      "database_id": "f905ef00-7e12-4c3c-9cd9-2621e7f91bea"
+    }
+  ],
+  "vars": {
+    "AUTH_TRUST_HOST": "true",
+    "DATABASE_URL": "file:./dev.db"
+  }
+}

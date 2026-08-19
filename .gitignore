@@ -45,3 +45,6 @@ next-env.d.ts
 
 # test artifacts
 .playwright-mcp/
+
+# OpenNext build artifacts
+/.open-next/

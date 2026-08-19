@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
@@ -8,6 +9,8 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+
+  if (!session) redirect("/login");
 
   return (
     <ThemeProvider>
