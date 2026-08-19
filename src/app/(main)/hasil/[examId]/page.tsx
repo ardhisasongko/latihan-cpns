@@ -58,13 +58,13 @@ export default async function HasilPage({
         <div
           className={`text-center p-6 rounded-xl mb-6 ${
             isLulus
-              ? "bg-green-50 border border-green-200"
-              : "bg-red-50 border border-red-200"
+              ? "bg-success/10 border border-success/30"
+              : "bg-danger/10 border border-danger/30"
           }`}
         >
           <div
             className={`text-5xl font-bold mb-2 ${
-              isLulus ? "text-green-600" : "text-red-600"
+              isLulus ? "text-success" : "text-danger"
             }`}
           >
             {rawScore}
@@ -74,7 +74,7 @@ export default async function HasilPage({
           </div>
           <div
             className={`text-2xl font-bold ${
-              isLulus ? "text-green-600" : "text-red-600"
+              isLulus ? "text-success" : "text-danger"
             }`}
           >
             {isLulus ? "LULUS" : "TIDAK LULUS"}
@@ -85,20 +85,20 @@ export default async function HasilPage({
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 bg-green-50 rounded-lg text-center">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="p-4 bg-success/10 rounded-lg text-center">
+            <div className="text-2xl font-bold text-success">
               {exam.totalCorrect}
             </div>
             <div className="text-xs text-muted-foreground">Benar</div>
           </div>
-          <div className="p-4 bg-red-50 rounded-lg text-center">
-            <div className="text-2xl font-bold text-red-600">
+          <div className="p-4 bg-danger/10 rounded-lg text-center">
+            <div className="text-2xl font-bold text-danger">
               {exam.totalWrong}
             </div>
             <div className="text-xs text-muted-foreground">Salah</div>
           </div>
-          <div className="p-4 bg-amber-50 rounded-lg text-center">
-            <div className="text-2xl font-bold text-amber-600">
+          <div className="p-4 bg-warning/10 rounded-lg text-center">
+            <div className="text-2xl font-bold text-warning">
               {exam.totalSkipped}
             </div>
             <div className="text-xs text-muted-foreground">Kosong</div>
@@ -140,10 +140,10 @@ export default async function HasilPage({
                 <span
                   className={`text-xs px-2 py-1 rounded-full font-medium ${
                     isCorrect
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-success/10 text-success"
                       : userAnswer
-                        ? "bg-red-100 text-red-700"
-                        : "bg-amber-100 text-amber-700"
+                        ? "bg-danger/10 text-danger"
+                        : "bg-warning/10 text-warning"
                   }`}
                 >
                   {isCorrect ? "Benar" : userAnswer ? "Salah" : "Kosong"}
@@ -160,9 +160,9 @@ export default async function HasilPage({
 
                   let optionClass = "border-border";
                   if (isThisCorrect) {
-                    optionClass = "border-green-300 bg-green-50";
+                    optionClass = "border-success/40 bg-success/10";
                   } else if (isThisUserAnswer && !isCorrect) {
-                    optionClass = "border-red-300 bg-red-50";
+                    optionClass = "border-danger/40 bg-danger/10";
                   }
 
                   return (
@@ -173,12 +173,12 @@ export default async function HasilPage({
                       <span className="font-medium text-sm">{letter}.</span>
                       <span className="text-sm flex-1">{option}</span>
                       {isThisCorrect && (
-                        <span className="text-green-600 text-xs font-medium">
+                        <span className="text-success text-xs font-medium">
                           ✓
                         </span>
                       )}
                       {isThisUserAnswer && !isThisCorrect && (
-                        <span className="text-red-600 text-xs font-medium">
+                        <span className="text-danger text-xs font-medium">
                           ✗
                         </span>
                       )}
@@ -192,7 +192,7 @@ export default async function HasilPage({
                   <span className="text-muted-foreground">Jawaban kamu: </span>
                   <span
                     className={`font-medium ${
-                      isCorrect ? "text-green-600" : "text-red-600"
+                      isCorrect ? "text-success" : "text-danger"
                     }`}
                   >
                     {userAnswer}
@@ -200,7 +200,7 @@ export default async function HasilPage({
                   {!isCorrect && (
                     <>
                       <span className="text-muted-foreground"> · Kunci: </span>
-                      <span className="font-medium text-green-600">
+                      <span className="font-medium text-success">
                         {pq.question.correctAnswer}
                       </span>
                     </>
@@ -211,9 +211,9 @@ export default async function HasilPage({
               {!userAnswer && (
                 <div className="text-sm mb-3">
                   <span className="text-muted-foreground">Jawaban: </span>
-                  <span className="font-medium text-amber-600">Kosong</span>
+                  <span className="font-medium text-warning">Kosong</span>
                   <span className="text-muted-foreground"> · Kunci: </span>
-                  <span className="font-medium text-green-600">
+                  <span className="font-medium text-success">
                     {pq.question.correctAnswer}
                   </span>
                 </div>

@@ -71,10 +71,10 @@ export default async function BookmarkPage() {
                     <span
                       className={`text-xs px-2 py-1 rounded-full font-medium ${
                         bookmark.question.difficulty === "mudah"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-success/10 text-success"
                           : bookmark.question.difficulty === "sulit"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
+                            ? "bg-danger/10 text-danger"
+                            : "bg-warning/10 text-warning"
                       }`}
                     >
                       {bookmark.question.difficulty}
@@ -103,7 +103,7 @@ export default async function BookmarkPage() {
                     />
                     <button
                       type="submit"
-                      className="text-sm text-red-500 hover:underline"
+                      className="text-sm text-danger hover:underline"
                     >
                       Hapus
                     </button>

@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Latihan CPNS
 
-## Getting Started
+Website latihan soal SKD CPNS (TWK/TIU/TKP) dengan pembahasan, berdasarkan kisi-kisi resmi Kepmenpan RB 321/2024. Deployed di Cloudflare Workers + D1.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router) + React 19 + Tailwind CSS v4
+- Prisma (engineType client, runtime workerd) + D1 adapter
+- NextAuth v5 (credentials + JWT) + bcryptjs
+- @opennextjs/cloudflare (deploy ke Workers)
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npx prisma generate          # regenerate client ke src/generated/prisma
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env` dibutuhkan (lihat `.env.example`). Jalankan `wrangler dev` untuk menjalankan dengan binding D1 lokal.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Seed
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsx prisma/seed.ts        # isi data soal dari prisma/seed-*.ts
+```
 
-## Learn More
+## Deploy ke Cloudflare Workers
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx opennextjs-cloudflare build
+npx wrangler deploy
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Konfigurasi di `wrangler.jsonc` (binding D1, vars) dan `open-next.config.ts`. AUTH_SECRET di-set sebagai secret worker (`npx wrangler secret put AUTH_SECRET`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Struktur Penting
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/lib/db.ts` — lazy PrismaClient + PrismaD1 (worker context)
+- `src/lib/scoring.ts` — poin & passing grade SKD
+- `src/app/(main)/kerjakan/[examId]/` — halaman kerjakan soal (mode belajar/ujian)
+- `prisma/seed-*.ts` — data soal TWK/TIU/TKP

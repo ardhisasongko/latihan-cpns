@@ -6,9 +6,9 @@ type Question = {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: string;
-  explanation: string;
-  explanationSource: string;
+  correctAnswer?: string;
+  explanation?: string;
+  explanationSource?: string;
 };
 
 type Answer = {

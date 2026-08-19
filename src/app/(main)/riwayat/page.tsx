@@ -107,14 +107,14 @@ export default async function RiwayatPage() {
                   <div className="text-right">
                     <div
                       className={`text-xl font-bold ${
-                        isLulus ? "text-green-600" : "text-red-600"
+                        isLulus ? "text-success" : "text-danger"
                       }`}
                     >
                       {rawScore}/{maxScore}
                     </div>
                     <div
                       className={`text-xs font-medium ${
-                        isLulus ? "text-green-600" : "text-red-600"
+                        isLulus ? "text-success" : "text-danger"
                       }`}
                     >
                       {isLulus ? "LULUS" : "TIDAK LULUS"}

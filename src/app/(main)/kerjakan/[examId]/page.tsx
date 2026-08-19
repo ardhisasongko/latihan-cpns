@@ -42,13 +42,16 @@ export default async function ExamPage({
     orderBy: { order: "asc" },
   });
 
+  const isBelajar = exam.mode === "belajar";
   const questions = packageQuestions.map((pq: (typeof packageQuestions)[number]) => ({
     id: pq.question.id,
     question: pq.question.question,
     options: parseOptions(pq.question.options),
-    correctAnswer: pq.question.correctAnswer,
-    explanation: pq.question.explanation,
-    explanationSource: pq.question.explanationSource,
+    // Kunci jawaban & pembahasan hanya dikirim di mode belajar.
+    // Di mode ujian dicegah agar tidak bisa diintip lewat devtools sebelum submit.
+    correctAnswer: isBelajar ? pq.question.correctAnswer : undefined,
+    explanation: isBelajar ? pq.question.explanation : undefined,
+    explanationSource: isBelajar ? pq.question.explanationSource : undefined,
   }));
 
   const existingAnswers: Record<

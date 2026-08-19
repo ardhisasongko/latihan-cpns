@@ -13,7 +13,7 @@ function getPrisma(): PrismaClient {
       globalForPrisma.prisma = new PrismaClient({
         adapter: new PrismaD1((env as unknown as Record<string, unknown>).DB as never),
       });
-    } catch (e) {
+    } catch {
       globalForPrisma.prisma = new PrismaClient();
     }
   }

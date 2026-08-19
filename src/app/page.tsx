@@ -169,7 +169,7 @@ export default async function HomePage() {
             Berdasarkan Kisi-kisi Kepmenpan RB Nomor 321 Tahun 2024 &amp;
             Peraturan BKN Nomor 5 Tahun 2024
           </p>
-          <p className="mt-1">© 2024 Latihan CPNS. Untuk edukasi.</p>
+          <p className="mt-1">© 2026 Latihan CPNS. Untuk edukasi.</p>
         </div>
       </footer>
     </div>

@@ -11,9 +11,9 @@ const categoryNames: Record<string, string> = {
 };
 
 const difficultyColors: Record<string, string> = {
-  mudah: "bg-green-100 text-green-700",
-  sedang: "bg-yellow-100 text-yellow-700",
-  sulit: "bg-red-100 text-red-700",
+  mudah: "bg-success/10 text-success",
+  sedang: "bg-warning/10 text-warning",
+  sulit: "bg-danger/10 text-danger",
 };
 
 export default async function CategoryPage({
@@ -77,7 +77,7 @@ export default async function CategoryPage({
                       <span
                         className={`text-xs px-2 py-1 rounded-full font-medium ${
                           difficultyColors[pkg.difficulty] ||
-                          "bg-gray-100 text-gray-700"
+                          "bg-muted text-muted-foreground"
                         }`}
                       >
                         {pkg.difficulty}
