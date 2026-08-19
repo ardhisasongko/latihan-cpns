@@ -25,7 +25,8 @@ export function Sidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-lg p-2"
+        aria-label="Buka menu"
+        className="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-full p-2.5 shadow-md"
       >
         <span className="text-lg">☰</span>
       </button>
@@ -40,24 +41,29 @@ export function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-card border-r border-border z-50 transform transition-transform md:translate-x-0 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-card border-r border-border z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4">
-          <h1 className="text-lg font-bold text-primary">Latihan CPNS</h1>
+        <div className="p-5">
+          <h1 className="text-xl font-extrabold text-primary tracking-tight">
+            Latihan CPNS
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            Persiapan SKD 2025
+          </p>
         </div>
 
-        <nav className="px-2">
+        <nav className="px-3">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors mb-1 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all mb-1 ${
                 pathname === item.href
-                  ? "bg-primary text-primary-foreground"
-                  : "text-foreground hover:bg-secondary"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-foreground hover:bg-muted"
               }`}
             >
               <span>{item.icon}</span>
@@ -69,7 +75,7 @@ export function Sidebar() {
         <div className="absolute bottom-4 left-0 right-0 px-4">
           <button
             onClick={toggle}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm hover:bg-secondary transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-muted transition-colors"
           >
             <span>{theme === "dark" ? "☀️" : "🌙"}</span>
             <span>{theme === "dark" ? "Mode Terang" : "Mode Gelap"}</span>

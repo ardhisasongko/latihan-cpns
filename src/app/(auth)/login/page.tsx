@@ -36,10 +36,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="bg-card border border-border rounded-xl p-8">
-          <h1 className="text-2xl font-bold text-center mb-6">Masuk</h1>
+        <h1 className="text-3xl font-extrabold text-primary text-center mb-6 tracking-tight">
+          Latihan CPNS
+        </h1>
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
+          <h2 className="text-xl font-bold text-center mb-6">Masuk</h2>
 
           {error && (
             <div className="bg-danger/10 border border-danger/30 text-danger rounded-lg p-3 mb-4 text-sm">
@@ -54,7 +57,7 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 required
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2.5 border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
             <div>
@@ -65,13 +68,13 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 required
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2.5 border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary text-primary-foreground py-2 rounded-lg hover:opacity-90 disabled:opacity-50"
+              className="w-full bg-primary text-primary-foreground py-3 font-bold rounded-full hover:opacity-90 disabled:opacity-50 transition-all"
             >
               {loading ? "Masuk..." : "Masuk"}
             </button>
@@ -79,7 +82,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-4">
             Belum punya akun?{" "}
-            <Link href="/register" className="text-primary hover:underline">
+            <Link href="/register" className="text-primary hover:underline font-medium">
               Daftar
             </Link>
           </p>
