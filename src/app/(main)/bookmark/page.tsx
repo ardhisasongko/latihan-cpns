@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Bookmark as BookmarkIcon } from "lucide-react";
 
 export default async function BookmarkPage() {
   const session = await auth();
@@ -42,7 +43,7 @@ export default async function BookmarkPage() {
 
       {bookmarks.length === 0 ? (
         <div className="text-center py-16 bg-card border border-border rounded-xl">
-          <div className="text-4xl mb-4">🔖</div>
+          <BookmarkIcon className="w-10 h-10 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
           <p className="text-muted-foreground mb-4">Belum ada bookmark</p>
           <Link
             href="/latihan"

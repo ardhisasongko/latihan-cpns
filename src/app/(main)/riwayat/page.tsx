@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { BarChart3 } from "lucide-react";
 import { examResult } from "@/lib/scoring";
 
 export default async function RiwayatPage() {
@@ -67,7 +68,7 @@ export default async function RiwayatPage() {
       {/* Exam List */}
       {exams.length === 0 ? (
         <div className="text-center py-16 bg-card border border-border rounded-xl">
-          <div className="text-4xl mb-4">📊</div>
+          <BarChart3 className="w-10 h-10 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
           <p className="text-muted-foreground mb-4">Belum ada riwayat ujian</p>
           <Link
             href="/latihan"

@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
+import { Flag, Calculator, User } from "lucide-react";
 
 const categories = [
   {
@@ -7,19 +8,19 @@ const categories = [
     name: "Tes Wawasan Kebangsaan",
     description:
       "Pengetahuan umum tentang ideologi, sejarah, dan budaya bangsa Indonesia",
-    icon: "🇮🇩",
+    icon: Flag,
   },
   {
     id: "TIU",
     name: "Tes Intelegensia Umum",
     description: "Kemampuan verbal, numerik, dan figuratif",
-    icon: "🧮",
+    icon: Calculator,
   },
   {
     id: "TKP",
     name: "Tes Karakteristik Pribadi",
     description: "Penilaian karakter, sikap, dan perilaku",
-    icon: "👤",
+    icon: User,
   },
 ];
 
@@ -48,7 +49,9 @@ export default async function LatihanPage() {
             href={`/latihan/${category.id}`}
             className="block p-6 bg-card border border-border rounded-xl hover:shadow-md transition-shadow"
           >
-            <div className="text-4xl mb-4">{category.icon}</div>
+            <div className="text-4xl mb-4">
+              <category.icon className="w-9 h-9 text-primary" aria-hidden="true" />
+            </div>
             <h2 className="text-lg font-semibold mb-2">{category.name}</h2>
             <p className="text-sm text-muted-foreground mb-4">
               {category.description}

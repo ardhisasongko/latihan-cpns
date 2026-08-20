@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+import { BookOpen, Timer } from "lucide-react";
 
 export default async function PackageDetailPage({
   params,
@@ -89,7 +90,8 @@ export default async function PackageDetailPage({
             value="belajar"
             className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
           >
-            📚 Mode Belajar
+            <BookOpen className="w-4 h-4 inline-block mr-2" aria-hidden="true" />
+            Mode Belajar
           </button>
           <button
             type="submit"
@@ -97,7 +99,8 @@ export default async function PackageDetailPage({
             value="ujian"
             className="w-full py-3 px-4 bg-card border border-border text-foreground rounded-lg font-medium hover:bg-muted transition-colors"
           >
-            ⏱️ Mode Ujian ({currentPkg.totalQuestions} menit)
+            <Timer className="w-4 h-4 inline-block mr-2" aria-hidden="true" />
+            Mode Ujian ({currentPkg.totalQuestions} menit)
           </button>
         </form>
       </div>

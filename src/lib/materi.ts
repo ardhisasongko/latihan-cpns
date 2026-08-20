@@ -8,7 +8,6 @@ export type TopikMateri = {
 export type KategoriMateri = {
   kode: string;
   nama: string;
-  emoji: string;
   deskripsi: string;
   topik: TopikMateri[];
 };
@@ -17,7 +16,6 @@ export const KATEGORI_MATERI: KategoriMateri[] = [
   {
     kode: "TWK",
     nama: "Tes Wawasan Kebangsaan",
-    emoji: "🇮🇩",
     deskripsi:
       "Menguji penguasaan nasionalisme, Pancasila, UUD 1945, NKRI, dan wawasan kebangsaan. Benar +5, salah/kosong 0.",
     topik: [
@@ -241,7 +239,6 @@ export const KATEGORI_MATERI: KategoriMateri[] = [
   {
     kode: "TIU",
     nama: "Tes Intelegensia Umum",
-    emoji: "🧮",
     deskripsi:
       "Menguji kemampuan verbal, numerik, dan figural. Benar +5, salah 0, kosong 0 — kecepatan dan ketelitian kunci.",
     topik: [
@@ -549,7 +546,6 @@ export const KATEGORI_MATERI: KategoriMateri[] = [
   {
     kode: "TKP",
     nama: "Tes Karakteristik Pribadi",
-    emoji: "👤",
     deskripsi:
       "Menguji sikap dan perilaku kerja. Penilaian bertingkat: sangat tepat +5, tepat +4, agak tepat +3, kurang tepat +2, tidak tepat +1.",
     topik: [

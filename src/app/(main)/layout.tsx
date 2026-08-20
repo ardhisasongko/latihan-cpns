@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { TriangleAlert } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { logout } from "@/actions/auth";
@@ -21,7 +22,7 @@ export default async function MainLayout({
           {/* Disclaimer */}
           <div className="bg-warning/10 border-b border-warning/30 px-4 py-2">
             <p className="text-xs text-muted-foreground text-center">
-              <strong className="text-warning">⚠️</strong> Soal latihan ini
+              <TriangleAlert className="w-3.5 h-3.5 inline-block text-warning mr-1" aria-hidden="true" /> Soal latihan ini
               berdasarkan kisi-kisi resmi Kepmenpan RB 321/2024. Bukan soal
               asli CPNS.
             </p>

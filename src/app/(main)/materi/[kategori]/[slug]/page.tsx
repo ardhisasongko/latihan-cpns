@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Flag, Calculator, User } from "lucide-react";
 import { getKategori, getTopik } from "@/lib/materi";
+
+const kategoriIcons: Record<string, typeof Flag> = {
+  TWK: Flag,
+  TIU: Calculator,
+  TKP: User,
+};
 
 export default async function MateriTopikPage({
   params,
@@ -12,6 +19,7 @@ export default async function MateriTopikPage({
 
   const kategoriData = getKategori(kategori);
   const topik = getTopik(kategori, slug);
+  const KategoriIcon = kategoriData ? kategoriIcons[kategoriData.kode] : Flag;
 
   if (!kategoriData || !topik) {
     notFound();
@@ -26,8 +34,9 @@ export default async function MateriTopikPage({
         >
           ← Semua Materi
         </Link>
-        <p className="text-sm font-medium text-primary">
-          {kategoriData.emoji} {kategoriData.nama}
+        <p className="text-sm font-medium text-primary flex items-center gap-1.5">
+          <KategoriIcon className="w-4 h-4" aria-hidden="true" />
+          {kategoriData.nama}
         </p>
         <h1 className="text-2xl font-bold mt-1">{topik.nama}</h1>
         <p className="text-muted-foreground">{topik.ringkas}</p>

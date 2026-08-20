@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
+import { Check, X } from "lucide-react";
 import { examResult } from "@/lib/scoring";
 import { parseOptions } from "@/lib/questions";
 
@@ -173,14 +174,10 @@ export default async function HasilPage({
                       <span className="font-medium text-sm">{letter}.</span>
                       <span className="text-sm flex-1">{option}</span>
                       {isThisCorrect && (
-                        <span className="text-success text-xs font-medium">
-                          ✓
-                        </span>
+                        <Check className="w-4 h-4 text-success shrink-0" aria-label="Jawaban benar" />
                       )}
                       {isThisUserAnswer && !isThisCorrect && (
-                        <span className="text-danger text-xs font-medium">
-                          ✗
-                        </span>
+                        <X className="w-4 h-4 text-danger shrink-0" aria-label="Jawaban salah" />
                       )}
                     </div>
                   );

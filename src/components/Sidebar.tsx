@@ -3,17 +3,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import {
+  Home,
+  Flag,
+  Calculator,
+  User,
+  BookOpen,
+  Search,
+  Bookmark,
+  History,
+  Sun,
+  Moon,
+  Menu,
+} from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 
 const navItems = [
-  { href: "/", label: "Beranda", icon: "🏠" },
-  { href: "/latihan/TWK", label: "TWK", icon: "🇮🇩" },
-  { href: "/latihan/TIU", label: "TIU", icon: "🧮" },
-  { href: "/latihan/TKP", label: "TKP", icon: "👤" },
-  { href: "/materi", label: "Materi", icon: "📖" },
-  { href: "/cari", label: "Cari Soal", icon: "🔍" },
-  { href: "/bookmark", label: "Bookmark", icon: "🔖" },
-  { href: "/riwayat", label: "Riwayat", icon: "📊" },
+  { href: "/", label: "Beranda", icon: Home },
+  { href: "/latihan/TWK", label: "TWK", icon: Flag },
+  { href: "/latihan/TIU", label: "TIU", icon: Calculator },
+  { href: "/latihan/TKP", label: "TKP", icon: User },
+  { href: "/materi", label: "Materi", icon: BookOpen },
+  { href: "/cari", label: "Cari Soal", icon: Search },
+  { href: "/bookmark", label: "Bookmark", icon: Bookmark },
+  { href: "/riwayat", label: "Riwayat", icon: History },
 ];
 
 export function Sidebar() {
@@ -29,7 +42,7 @@ export function Sidebar() {
         aria-label="Buka menu"
         className="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-full p-2.5 shadow-md"
       >
-        <span className="text-lg">☰</span>
+        <Menu className="w-5 h-5" aria-hidden="true" />
       </button>
 
       {/* Overlay */}
@@ -75,7 +88,7 @@ export function Sidebar() {
                   : "text-foreground hover:bg-muted"
               }`}
             >
-              <span>{item.icon}</span>
+              <item.icon className="w-4 h-4 shrink-0" aria-hidden="true" />
               <span>{item.label}</span>
             </Link>
           ))}
@@ -86,7 +99,9 @@ export function Sidebar() {
             onClick={toggle}
             className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-muted transition-colors"
           >
-            <span>{theme === "dark" ? "☀️" : "🌙"}</span>
+            <span aria-hidden="true">
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </span>
             <span>{theme === "dark" ? "Mode Terang" : "Mode Gelap"}</span>
           </button>
         </div>

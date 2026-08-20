@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Flag, Calculator, User, Search } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { logout } from "@/actions/auth";
@@ -110,7 +111,7 @@ export default async function HomePage() {
           <Link href="/latihan/TWK" className="group">
             <div className="bg-card border border-border rounded-xl p-6 hover:border-primary transition-colors">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🇮🇩</span>
+                <Flag className="w-6 h-6 text-primary" aria-hidden="true" />
               </div>
               <h4 className="font-bold mb-2 group-hover:text-primary transition-colors">
                 TWK
@@ -125,7 +126,7 @@ export default async function HomePage() {
           <Link href="/latihan/TIU" className="group">
             <div className="bg-card border border-border rounded-xl p-6 hover:border-primary transition-colors">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🧮</span>
+                <Calculator className="w-6 h-6 text-primary" aria-hidden="true" />
               </div>
               <h4 className="font-bold mb-2 group-hover:text-primary transition-colors">
                 TIU
@@ -139,7 +140,7 @@ export default async function HomePage() {
           <Link href="/latihan/TKP" className="group">
             <div className="bg-card border border-border rounded-xl p-6 hover:border-primary transition-colors">
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">👤</span>
+                <User className="w-6 h-6 text-primary" aria-hidden="true" />
               </div>
               <h4 className="font-bold mb-2 group-hover:text-primary transition-colors">
                 TKP
@@ -158,7 +159,7 @@ export default async function HomePage() {
             href="/cari"
             className="block bg-card border border-border rounded-xl p-6 text-center hover:border-primary transition-colors"
           >
-            <span className="text-2xl mb-2 block">🔍</span>
+            <Search className="w-8 h-8 mb-2 mx-auto text-primary" aria-hidden="true" />
             <span className="font-bold">Cari Soal</span>
             <p className="text-sm text-muted-foreground mt-1">
               Cari soal berdasarkan keyword atau topik

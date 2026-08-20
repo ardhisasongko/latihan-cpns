@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import Link from "next/link";
+import { Search } from "lucide-react";
 
 type SearchResult = {
   id: string;
@@ -17,6 +18,7 @@ export default function CariPage() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSearch(e: FormEvent) {
     e.preventDefault();
@@ -25,12 +27,24 @@ export default function CariPage() {
 
     setLoading(true);
     setSearched(true);
+    setError("");
 
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+      if (res.status === 429) {
+        setError("Terlalu banyak permintaan, coba lagi beberapa saat.");
+        setResults([]);
+        return;
+      }
+      if (!res.ok) {
+        setError("Terjadi kesalahan, coba lagi.");
+        setResults([]);
+        return;
+      }
       const data = await res.json();
       setResults(data.results || []);
     } catch {
+      setError("Terjadi kesalahan, coba lagi.");
       setResults([]);
     } finally {
       setLoading(false);
@@ -51,6 +65,7 @@ export default function CariPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Contoh: Pancasila, statistika, verbal..."
+            aria-label="Kata kunci pencarian soal"
             className="flex-1 px-4 py-3 bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           />
           <button
@@ -63,9 +78,15 @@ export default function CariPage() {
         </div>
       </form>
 
-      {searched && !loading && results.length === 0 && (
+      {searched && !loading && error && (
+        <div className="text-center py-8 bg-danger/10 border border-danger/30 rounded-xl text-danger text-sm mb-4">
+          {error}
+        </div>
+      )}
+
+      {searched && !loading && !error && results.length === 0 && (
         <div className="text-center py-16 bg-card border border-border rounded-xl">
-          <div className="text-4xl mb-4">🔍</div>
+          <Search className="w-10 h-10 mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
           <p className="text-muted-foreground">
             Tidak ada soal yang cocok dengan pencarian &quot;{query}&quot;
           </p>

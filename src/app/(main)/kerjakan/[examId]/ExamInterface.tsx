@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { Star, CheckCircle2, XCircle } from "lucide-react";
 
 type Question = {
   id: string;
@@ -221,7 +222,11 @@ export function ExamInterface({
                 : "text-muted-foreground hover:text-warning"
             }`}
           >
-            {bookmarks.has(currentQuestion.id) ? "★" : "☆"}
+            {bookmarks.has(currentQuestion.id) ? (
+              <Star className="w-6 h-6 fill-warning text-warning" aria-label="Hapus bookmark" />
+            ) : (
+              <Star className="w-6 h-6 text-muted-foreground hover:text-warning" aria-label="Tandai bookmark" />
+            )}
           </button>
         </div>
 
@@ -277,15 +282,23 @@ export function ExamInterface({
         {mode === "belajar" && showFeedback[currentQuestion.id] && (
           <div className="mt-6 p-4 rounded-lg bg-muted">
             <div
-              className={`font-medium mb-2 ${
+              className={`font-medium mb-2 flex items-center gap-1.5 ${
                 answers[currentQuestion.id] === currentQuestion.correctAnswer
                   ? "text-success"
                   : "text-danger"
               }`}
             >
-              {answers[currentQuestion.id] === currentQuestion.correctAnswer
-                ? "✓ Jawaban Benar!"
-                : `✗ Jawaban Salah (Jawaban: ${currentQuestion.correctAnswer})`}
+              {answers[currentQuestion.id] === currentQuestion.correctAnswer ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                  Jawaban Benar!
+                </>
+              ) : (
+                <>
+                  <XCircle className="w-4 h-4" aria-hidden="true" />
+                  Jawaban Salah (Jawaban: {currentQuestion.correctAnswer})
+                </>
+              )}
             </div>
             <div className="text-sm text-muted-foreground">
               <p className="mb-1 font-medium">Penjelasan:</p>
