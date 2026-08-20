@@ -184,17 +184,24 @@ export default async function ExamPage({
     });
 
     if (locked.count === 1) {
-      await db.$transaction([
-        db.examAnswer.deleteMany({ where: { examId } }),
-        db.examAnswer.createMany({ data: examAnswers }),
-      ]);
+      // Interactive transaction: proxy db.ts menghasilkan native Promise,
+      // bukan PrismaPromise -> array-form $transaction menolak. Callback
+      // menerima tx client asli sehingga aman.
+      await db.$transaction(async (tx) => {
+        await tx.examAnswer.deleteMany({ where: { examId } });
+        await tx.examAnswer.createMany({ data: examAnswers });
+      });
     }
 
     redirect(`/hasil/${examId}`);
   }
 
-  async function toggleBookmark(userId: string, questionId: string) {
+  async function toggleBookmark(questionId: string) {
     "use server";
+
+    const serverSession = await auth();
+    if (!serverSession?.user?.id) return;
+    const userId = serverSession.user.id;
 
     const existing = await db.bookmark.findUnique({
       where: {
@@ -213,7 +220,7 @@ export default async function ExamPage({
 
   const submitWithExamId = submitAnswers.bind(null, exam.id);
   const saveAnswerWithExamId = saveAnswer.bind(null, exam.id);
-  const toggleBookmarkWithUser = toggleBookmark.bind(null, session.user.id);
+  const toggleBookmarkWithUser = toggleBookmark;
 
   return (
     <ExamInterface

@@ -1,3 +1,5 @@
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -21,6 +23,9 @@ export default async function CategoryPage({
 }: {
   params: Promise<{ category: string }>;
 }) {
+  const session = await auth();
+  if (!session) redirect("/login");
+
   const { category: raw } = await params;
   const category = raw.toUpperCase();
 

@@ -33,7 +33,7 @@ const config = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }: { token: Record<string, unknown>; user: { id: string } | null }) {
+    jwt({ token, user }: { token: Record<string, unknown>; user?: { id: string } }) {
       if (user) {
         token.id = user.id;
       }

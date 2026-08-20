@@ -70,6 +70,7 @@ export function ExamInterface({
     return Math.max(0, timeLimit - elapsed);
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
 
   const currentQuestion = questions[currentIndex];
@@ -117,7 +118,10 @@ export function ExamInterface({
     }
 
     // Simpan ke server agar tidak hilang saat refresh
-    onSaveAnswer(questionId, answer).catch(() => {});
+    setIsSaving(true);
+    onSaveAnswer(questionId, answer)
+      .catch(() => alert("Gagal menyimpan jawaban. Periksa koneksi internet Anda."))
+      .finally(() => setIsSaving(false));
   };
 
   const handleToggleBookmark = async (questionId: string) => {
@@ -351,6 +355,12 @@ export function ExamInterface({
           </button>
         )}
       </div>
+
+      {isSaving && (
+        <div className="fixed bottom-4 right-4 bg-primary text-primary-foreground px-4 py-2 rounded-full text-xs font-medium shadow-lg animate-pulse z-50">
+          Menyimpan...
+        </div>
+      )}
 
       {/* Submit confirmation modal */}
       {showSubmitConfirm && (

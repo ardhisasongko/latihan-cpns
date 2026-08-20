@@ -33,5 +33,6 @@ export function examResult(category: string, totalQuestions: number, totalCorrec
   const rawScore = totalCorrect * ppk;
   const maxScore = totalQuestions * ppk;
   const passing = requiredCorrect(category, totalQuestions) * ppk;
-  return { rawScore, maxScore, passing, isLulus: totalCorrect >= requiredCorrect(category, totalQuestions) };
+  const percentageScore = maxScore > 0 ? Math.round((rawScore / maxScore) * 100) : 0;
+  return { rawScore, maxScore, passing, percentageScore, isLulus: totalCorrect >= requiredCorrect(category, totalQuestions) };
 }

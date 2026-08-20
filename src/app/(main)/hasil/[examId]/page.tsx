@@ -28,7 +28,7 @@ export default async function HasilPage({
 
   const category = exam.package.category;
   const totalQuestions = exam.package.totalQuestions;
-  const { rawScore, maxScore, passing, isLulus } = examResult(
+  const { rawScore, maxScore, passing, percentageScore, isLulus } = examResult(
     category,
     totalQuestions,
     exam.totalCorrect || 0
@@ -68,10 +68,10 @@ export default async function HasilPage({
               isLulus ? "text-success" : "text-danger"
             }`}
           >
-            {rawScore}
+            {percentageScore}
           </div>
           <div className="text-sm text-muted-foreground mb-3">
-            dari {maxScore} poin maksimal
+            Skor 0-100 (Poin Asli: {rawScore}/{maxScore})
           </div>
           <div
             className={`text-2xl font-bold ${

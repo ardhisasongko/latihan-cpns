@@ -1,7 +1,22 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function GET(request: NextRequest) {
+  // Rate limiting: 20 requests per minute per IP
+  try {
+    await rateLimit(request);
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message.includes("Rate limit exceeded")) {
+      return NextResponse.json(
+        { error: "Terlalu banyak permintaan, coba lagi nanti." },
+        { status: 429 }
+      );
+    }
+    // re-throw unexpected errors
+    throw err;
+  }
+
   const q = request.nextUrl.searchParams.get("q")?.trim();
   if (!q || q.length < 2) {
     return NextResponse.json({ results: [] });

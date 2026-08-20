@@ -68,7 +68,6 @@ function createPackages(
   }
 
   // Mixed subcategory package
-  const mixedQuestions = shuffle(questions);
   packages.push({
     name: `${category} - Campuran Semua Topik`,
     category,

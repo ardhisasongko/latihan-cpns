@@ -81,7 +81,7 @@ export default async function RiwayatPage() {
         <div className="space-y-3">
           {exams.map((exam: (typeof exams)[number]) => {
             const cat = exam.package.category;
-            const { rawScore, maxScore, isLulus } = examResult(
+            const { rawScore, maxScore, percentageScore, isLulus } = examResult(
               cat,
               exam.package.totalQuestions,
               exam.totalCorrect || 0
@@ -111,7 +111,10 @@ export default async function RiwayatPage() {
                         isLulus ? "text-success" : "text-danger"
                       }`}
                     >
-                      {rawScore}/{maxScore}
+                      {percentageScore}/100
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Poin: {rawScore}/{maxScore}
                     </div>
                     <div
                       className={`text-xs font-medium ${

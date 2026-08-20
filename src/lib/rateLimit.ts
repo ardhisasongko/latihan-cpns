@@ -1,5 +1,7 @@
-// Simple in-memory rate limiter (per-instance, suitable for demo)
-// Limits requests per window per IP
+// WARNING: Simple in-memory rate limiter.
+// Ini hanya cocok untuk demo atau environment single-instance.
+// Di production dengan Cloudflare Workers / multi-instance, memori ini tidak terbagi antar instance.
+// Sebaiknya gunakan Redis (Upstash) atau Cloudflare KV/Rate Limiting untuk skala produksi.
 type RateLimitInfo = {
   count: number;
   resetTime: number; // epoch ms
@@ -31,8 +33,14 @@ function cleanup() {
     }
   }
 }
-// run cleanup every minute
-setInterval(cleanup, windowMs);
+// run cleanup every minute (wrapped to avoid Cloudflare Workers crash on top-level setInterval)
+if (typeof setInterval !== "undefined") {
+  try {
+    setInterval(cleanup, windowMs);
+  } catch (e) {
+    // Ignore in edge environments where setInterval might be disabled
+  }
+}
 
 export async function rateLimit(request: Request, options: { limit?: number; windowMs?: number } = {}) {
   const { limit = maxRequests, windowMs: wMs = windowMs } = options;

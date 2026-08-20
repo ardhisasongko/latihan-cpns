@@ -7,7 +7,7 @@ export function middleware() {
 
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-eval' 'nonce-${nonce}' https:`,
+    `script-src 'self' 'nonce-${nonce}' https:`,
     "style-src 'self' 'unsafe-inline' https:",
     "img-src 'self' data: https:",
     "font-src 'self' https:",
