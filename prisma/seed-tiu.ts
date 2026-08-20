@@ -2969,10 +2969,10 @@ export const tiuQuestions = [
     subcategory: "Numerik - Perbandingan",
     difficulty: "sulit",
     cognitiveLevel: "C2",
-    question: "Jika perbandingan panjang, lebar, dan tinggi kotak adalah 2:3:4, dan volume kotak adalah 2400 cm³, maka panjang kotak adalah...",
+    question: "Jika perbandingan panjang, lebar, dan tinggi kotak adalah 2:3:4, dan volume kotak adalah 3000 cm³, maka panjang kotak adalah...",
     options: JSON.stringify(["A. 10 cm", "B. 12 cm", "C. 15 cm", "D. 20 cm", "E. 24 cm"]),
-    correctAnswer: "D",
-    explanation: "Volume = 2x × 3x × 4x = 24x³ = 2400 → x³ = 100 → x ≈ 4.64. Panjang = 2 × 4.64 ≈ 9.28. Pembulatan terdekat: 20 cm.",
+    correctAnswer: "A",
+    explanation: "Volume = 2x × 3x × 4x = 24x³ = 3000 → x³ = 125 → x = 5. Panjang = 2 × 5 = 10 cm.",
     explanationSource: "Perbandingan: volume kotak"
   },
   {

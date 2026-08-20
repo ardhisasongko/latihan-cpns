@@ -3991,7 +3991,7 @@ export const tkpQuestions = [
     cognitiveLevel: "C3",
     question: "Anda diminta untuk memimpin proyek besar dengan tenggat waktu yang ketat. Bagaimana Anda mengelola proyek ini?",
     options: JSON.stringify([
-      "A. Menyusun perencanaan matang, mengalokasikan sumber daya, memantau进度, dan mengambil tindakan korektif jika diperlukan",
+      "A. Menyusun perencanaan matang, mengalokasikan sumber daya, memantau progres, dan mengambil tindakan korektif jika diperlukan",
       "B. Memulai tanpa perencanaan",
       "C. Menyerahkan pengelolaan kepada orang lain",
       "D. Mengabaikan tenggat waktu",

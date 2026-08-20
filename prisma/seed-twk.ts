@@ -125,10 +125,10 @@ export const twkQuestions = [
       "subcategory": "Pancasila",
       "difficulty": "sedang",
       "cognitiveLevel": "C2",
-      "question": "Perbedaan sila ketiga Pancasila dalam UUD 1945 dengan Piagam Jakarta adalah...",
+      "question": "Perbedaan sila pertama Pancasila dalam UUD 1945 dengan Piagam Jakarta adalah...",
       "options": "{\"A\": \"Terdapat tambahan kata 'Musyawarah'\", \"B\": \"Terdapat tambahan kata 'Maha Esa'\", \"C\": \"Terdapat penghapusan kata 'kewajiban'\", \"D\": \"Terdapat penghapusan kata 'bagi seluruh rakyat Indonesia'\", \"E\": \"Terdapat penggantian kata 'keadilan' dengan 'kesejahteraan'\"}",
       "correctAnswer": "C",
-      "explanation": "Dalam Piagam Jakarta sila ketiga berbunyi 'Kedaulatan berada di tangan rakyat yang dilaksanakan menurutUndang-Undang Dasar'. Dalam UUD 1945, sila ketiga berbunyi 'Persatuan Indonesia'. Perubahan terjadi pada sila pertama, bukan ketiga. Namun yang paling tepat adalah penghapusan kewajiban ibadah bagi pemeluk agama dari sila pertama Piagam Jakarta.",
+      "explanation": "Dalam Piagam Jakarta, sila pertama berbunyi 'Ketuhanan dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya'. Dalam Sidang PPKI 18 Agustus 1945, frasa 'dengan kewajiban menjalankan syariat Islam bagi pemeluk-pemeluknya' dihapus demi persatuan bangsa, sehingga sila pertama menjadi 'Ketuhanan Yang Maha Esa'.",
       "explanationSource": "Perbandingan Piagam Jakarta dan Pembukaan UUD 1945"
 },
   {
