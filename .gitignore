@@ -52,3 +52,6 @@ next-env.d.ts
 # Wrangler local state
 .wrangler/
 !.env.example
+
+# prisma local db
+/prisma/dev.db
