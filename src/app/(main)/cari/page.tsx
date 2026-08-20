@@ -79,7 +79,10 @@ export default function CariPage() {
       </form>
 
       {searched && !loading && error && (
-        <div className="text-center py-8 bg-danger/10 border border-danger/30 rounded-xl text-danger text-sm mb-4">
+        <div
+          role="alert"
+          className="text-center py-8 bg-danger/10 border border-danger/30 rounded-xl text-danger text-sm mb-4"
+        >
           {error}
         </div>
       )}

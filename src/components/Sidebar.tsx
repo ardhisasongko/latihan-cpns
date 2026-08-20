@@ -40,7 +40,7 @@ export function Sidebar() {
       <button
         onClick={() => setOpen(!open)}
         aria-label="Buka menu"
-        className="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-full p-2.5 shadow-md"
+        className="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-full p-3 shadow-md"
       >
         <Menu className="w-5 h-5" aria-hidden="true" />
       </button>
@@ -81,7 +81,7 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all mb-1 ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all mb-1 ${
                 pathname === item.href ||
                 (item.href !== "/" && pathname.startsWith(item.href))
                   ? "bg-primary text-primary-foreground shadow-md"
@@ -97,7 +97,7 @@ export function Sidebar() {
         <div className="absolute bottom-4 left-0 right-0 px-4">
           <button
             onClick={toggle}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-muted transition-colors"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium hover:bg-muted transition-colors"
           >
             <span aria-hidden="true">
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}

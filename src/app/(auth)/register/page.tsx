@@ -52,39 +52,48 @@ export default function RegisterPage() {
           <h2 className="text-xl font-bold text-center mb-6">Daftar</h2>
 
           {error && (
-            <div className="bg-danger/10 border border-danger/30 text-danger rounded-lg p-3 mb-4 text-sm">
+            <div
+              role="alert"
+              className="bg-danger/10 border border-danger/30 text-danger rounded-lg p-3 mb-4 text-sm"
+            >
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Nama</label>
+              <label htmlFor="name" className="block text-sm font-medium mb-1">Nama</label>
               <input
+                id="name"
                 name="name"
                 type="text"
                 required
+                autoComplete="name"
                 className="w-full px-4 py-2.5 border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
               <input
+                id="email"
                 name="email"
                 type="email"
                 required
+                autoComplete="email"
                 className="w-full px-4 py-2.5 border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label htmlFor="password" className="block text-sm font-medium mb-1">
                 Password
               </label>
               <input
+                id="password"
                 name="password"
                 type="password"
                 required
                 minLength={6}
+                autoComplete="new-password"
                 className="w-full px-4 py-2.5 border border-border rounded-xl bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
               />
               <p className="text-xs text-muted-foreground mt-1">

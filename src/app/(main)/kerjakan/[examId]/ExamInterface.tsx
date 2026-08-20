@@ -190,12 +190,13 @@ export function ExamInterface({
       </div>
 
       {/* Question navigation dots */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-1.5 mb-6">
         {questions.map((q, i) => (
           <button
             key={q.id}
             onClick={() => setCurrentIndex(i)}
-            className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
+            aria-label={`Ke soal ${i + 1}${answers[q.id] ? " (dijawab)" : ""}`}
+            className={`w-11 h-11 rounded-lg text-xs font-medium transition-colors ${
               i === currentIndex
                 ? "bg-primary text-primary-foreground"
                 : answers[q.id]
@@ -216,7 +217,12 @@ export function ExamInterface({
           </span>
           <button
             onClick={() => handleToggleBookmark(currentQuestion.id)}
-            className={`text-xl ${
+            aria-label={
+              bookmarks.has(currentQuestion.id)
+                ? "Hapus bookmark soal ini"
+                : "Tandai bookmark soal ini"
+            }
+            className={`p-2.5 -m-1.5 rounded-lg transition-colors ${
               bookmarks.has(currentQuestion.id)
                 ? "text-warning"
                 : "text-muted-foreground hover:text-warning"
@@ -320,7 +326,7 @@ export function ExamInterface({
         <button
           onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
           disabled={currentIndex === 0}
-          className="px-4 py-2 text-sm font-medium bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-4 py-3 text-sm font-medium bg-card border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed"
         >
           ← Sebelumnya
         </button>
@@ -328,7 +334,7 @@ export function ExamInterface({
         {currentIndex === questions.length - 1 ? (
           <button
             onClick={() => setShowSubmitConfirm(true)}
-            className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90"
+            className="px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90"
           >
             Selesai & Submit
           </button>
@@ -339,7 +345,7 @@ export function ExamInterface({
                 Math.min(questions.length - 1, prev + 1)
               )
             }
-            className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90"
+            className="px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90"
           >
             Selanjutnya →
           </button>
@@ -359,14 +365,14 @@ export function ExamInterface({
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowSubmitConfirm(false)}
-                className="px-4 py-2 text-sm font-medium bg-card border border-border rounded-lg hover:bg-muted"
+                className="px-4 py-3 text-sm font-medium bg-card border border-border rounded-lg hover:bg-muted"
               >
                 Batal
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90 disabled:opacity-50"
+                className="px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:opacity-90 disabled:opacity-50"
               >
                 {isSubmitting ? "Mengirim..." : "Ya, Submit"}
               </button>
