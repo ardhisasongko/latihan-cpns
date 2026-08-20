@@ -13,7 +13,11 @@ export default async function HomePage() {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-primary">Latihan CPNS</h1>
+          <Link href="/" aria-label="Ke beranda">
+            <h1 className="text-xl font-bold text-primary hover:opacity-80 transition-opacity">
+              Latihan CPNS
+            </h1>
+          </Link>
           <nav className="flex items-center gap-4">
             {session ? (
               <>

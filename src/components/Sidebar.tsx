@@ -46,9 +46,16 @@ export function Sidebar() {
         }`}
       >
         <div className="p-5">
-          <h1 className="text-xl font-extrabold text-primary tracking-tight">
-            Latihan CPNS
-          </h1>
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="block"
+            aria-label="Ke beranda"
+          >
+            <h1 className="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">
+              Latihan CPNS
+            </h1>
+          </Link>
           <p className="text-xs text-muted-foreground mt-1">
             Persiapan SKD 2025
           </p>

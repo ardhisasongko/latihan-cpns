@@ -38,9 +38,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <h1 className="text-3xl font-extrabold text-primary text-center mb-6 tracking-tight">
+        <Link href="/" aria-label="Ke beranda">
+        <h1 className="text-3xl font-extrabold text-primary text-center mb-6 tracking-tight hover:opacity-80 transition-opacity">
           Latihan CPNS
         </h1>
+      </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-lg">
           <h2 className="text-xl font-bold text-center mb-6">Masuk</h2>
 
