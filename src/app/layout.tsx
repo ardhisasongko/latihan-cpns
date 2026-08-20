@@ -32,7 +32,9 @@ export default function RootLayout({
     <html lang="id" className="h-full antialiased" suppressHydrationWarning>
       <head>
         {/* Terapkan tema gelap sebelum paint agar tidak ada flash (FOUC).
-            Script eksternal agar sesuai CSP prod ('self', tanpa unsafe-inline) */}
+            Script eksternal agar sesuai CSP prod ('self', tanpa unsafe-inline).
+            Sync script disengaja: harus blok render hingga tema diterapkan. */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="/theme-init.js" />
       </head>
       <body className="min-h-full flex flex-col">
