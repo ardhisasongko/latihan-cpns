@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { logout } from "@/actions/auth";
 
 export default async function HomePage() {
   const session = await auth();
@@ -25,7 +26,7 @@ export default async function HomePage() {
                 >
                   Riwayat
                 </Link>
-                <form action="/api/auth/signout" method="post">
+                <form action={logout}>
                   <button
                     type="submit"
                     className="text-sm text-danger hover:underline"

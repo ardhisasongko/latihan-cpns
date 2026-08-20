@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { logout } from "@/actions/auth";
 
 export default async function MainLayout({
   children,
@@ -35,7 +36,7 @@ export default async function MainLayout({
                   <span className="text-sm text-muted-foreground hidden sm:inline">
                     {session.user.name || session.user.email}
                   </span>
-                  <form action="/api/auth/signout" method="post">
+                  <form action={logout}>
                     <button
                       type="submit"
                       className="text-sm font-medium bg-card border border-border px-4 py-2 rounded-full hover:bg-muted transition-colors"

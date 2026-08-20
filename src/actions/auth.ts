@@ -1,7 +1,9 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
 import { z } from "zod";
+import { signOut } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 const registerSchema = z.object({
@@ -31,4 +33,9 @@ export async function register(data: { name: string; email: string; password: st
   });
 
   return { success: "Registrasi berhasil" };
+}
+
+export async function logout() {
+  await signOut({ redirect: false });
+  redirect("/login");
 }
