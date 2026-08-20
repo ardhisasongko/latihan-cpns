@@ -10,6 +10,7 @@ const navItems = [
   { href: "/latihan/TWK", label: "TWK", icon: "🇮🇩" },
   { href: "/latihan/TIU", label: "TIU", icon: "🧮" },
   { href: "/latihan/TKP", label: "TKP", icon: "👤" },
+  { href: "/materi", label: "Materi", icon: "📖" },
   { href: "/cari", label: "Cari Soal", icon: "🔍" },
   { href: "/bookmark", label: "Bookmark", icon: "🔖" },
   { href: "/riwayat", label: "Riwayat", icon: "📊" },
@@ -68,7 +69,8 @@ export function Sidebar() {
               href={item.href}
               onClick={() => setOpen(false)}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all mb-1 ${
-                pathname === item.href
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href))
                   ? "bg-primary text-primary-foreground shadow-md"
                   : "text-foreground hover:bg-muted"
               }`}
