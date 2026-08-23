@@ -3,6 +3,9 @@ import {
   pointsFor,
   requiredCorrect,
   examResult,
+  parseWeights,
+  tkpScore,
+  weightedExamResult,
   passingGrades,
   maxScores,
 } from "./scoring";
@@ -75,6 +78,67 @@ describe("examResult", () => {
   it("totalCorrect melebihi total soal: persentase bisa >100 (perilaku saat ini)", () => {
     // Catatan: tidak di-clamp karena input dari client dibatasi jumlah soal.
     expect(examResult("TWK", 30, 35).percentageScore).toBe(117);
+  });
+});
+
+describe("parseWeights", () => {
+  it("parse JSON bobot valid, hanya kunci A-E & angka", () => {
+    expect(parseWeights('{"A":5,"B":3,"C":2,"D":2,"E":1}')).toEqual({
+      A: 5, B: 3, C: 2, D: 2, E: 1,
+    });
+    expect(parseWeights('{"A":5,"F":9,"B":"x"}')).toEqual({ A: 5 });
+  });
+
+  it("null/kosong/malformed -> object kosong (fallback biner)", () => {
+    expect(parseWeights(null)).toEqual({});
+    expect(parseWeights(undefined)).toEqual({});
+    expect(parseWeights("")).toEqual({});
+    expect(parseWeights("bukan json")).toEqual({});
+    expect(parseWeights("[1,2]")).toEqual({});
+  });
+});
+
+describe("tkpScore", () => {
+  const weights = '{"A":5,"B":3,"C":2,"D":2,"E":1}';
+
+  it("pilih opsi berbobot: skor = bobotnya", () => {
+    expect(tkpScore(weights, "A", "A").score).toBe(5);
+    expect(tkpScore(weights, "E", "A").score).toBe(1);
+    expect(tkpScore(weights, "C", "A").score).toBe(2);
+  });
+
+  it("tidak menjawab -> 0", () => {
+    expect(tkpScore(weights, null, "A").score).toBe(0);
+  });
+
+  it("fallback biner saat soal tanpa bobot (data lama)", () => {
+    const r = tkpScore(null, "A", "A");
+    expect(r.score).toBe(3);
+    expect(r.hasWeights).toBe(false);
+    expect(tkpScore(null, "B", "A").score).toBe(0);
+  });
+});
+
+describe("weightedExamResult", () => {
+  it("paket 45 soal: maksimum 225, ambang = 34x5 = 170", () => {
+    const r = weightedExamResult(45, 170);
+    expect(r.maxScore).toBe(225);
+    expect(r.passing).toBe(170);
+    expect(r.isLulus).toBe(true);
+    expect(weightedExamResult(45, 169).isLulus).toBe(false);
+  });
+
+  it("persentase dari poin terkumpul", () => {
+    // 112/225 = 49.78 -> 50
+    expect(weightedExamResult(45, 112).percentageScore).toBe(50);
+    expect(weightedExamResult(45, 225).percentageScore).toBe(100);
+    expect(weightedExamResult(45, 0).percentageScore).toBe(0);
+  });
+
+  it("paket kecil tetap konsisten", () => {
+    const r = weightedExamResult(10, 50);
+    expect(r.maxScore).toBe(50);
+    expect(r.isLulus).toBe(true); // requiredCorrect(TKP,10)=8 -> 40; 50 >= 40
   });
 });
 
