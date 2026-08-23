@@ -19,16 +19,24 @@ async function getLibSqlPrisma(): Promise<PrismaClient> {
 
 async function getPrisma(): Promise<PrismaClient> {
   if (!globalForPrisma.prisma) {
+    let d1: unknown;
     try {
+      // Hanya kasus "tidak ada context Cloudflare" (mis. next dev) yang
+      // boleh fallback ke SQLite lokal.
       const { env } = getCloudflareContext();
-      const d1 = (env as unknown as Record<string, unknown>).DB;
-      // D1 tersedia (Cloudflare) -> pakai D1; selain itu (next dev) -> SQLite lokal
-      globalForPrisma.prisma = d1
-        ? new PrismaClient({ adapter: new PrismaD1(d1 as never) })
-        : await getLibSqlPrisma();
+      d1 = (env as unknown as Record<string, unknown>).DB;
     } catch {
       globalForPrisma.prisma = await getLibSqlPrisma();
+      return globalForPrisma.prisma;
     }
+    if (!d1) {
+      // Di production, DB binding hilang adalah kesalahan konfigurasi —
+      // gagal cepat dengan pesan jelas, jangan diam-diam pakai file lokal.
+      throw new Error(
+        "Cloudflare D1 binding 'DB' tidak ditemukan. Periksa wrangler.jsonc."
+      );
+    }
+    globalForPrisma.prisma = new PrismaClient({ adapter: new PrismaD1(d1 as never) });
   }
   return globalForPrisma.prisma;
 }
@@ -55,7 +63,10 @@ const MODEL_METHODS = new Set([
 // - db.$<clientMethod>(...)   -> method client (mis. $transaction)
 export const db = new Proxy({} as PrismaClient, {
   get: (_target, prop) => {
-    const key = prop as string;
+    // Runtime bisa mem-probe proxy dengan Symbol (Symbol.toPrimitive,
+    // util.inspect.custom); akses .startsWith pada Symbol akan crash.
+    if (typeof prop !== "string") return undefined;
+    const key = prop;
     if (MODELS.has(key)) {
       return new Proxy(
         {},

@@ -19,19 +19,23 @@ export default function LoginPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
 
-    setLoading(false);
-
-    if (result?.error) {
-      setError("Email atau password salah");
-    } else {
-      router.push("/");
-      router.refresh();
+      if (result?.error) {
+        setError("Email atau password salah");
+      } else {
+        router.push("/");
+        router.refresh();
+      }
+    } catch {
+      setError("Terjadi kesalahan saat masuk. Coba lagi.");
+    } finally {
+      setLoading(false);
     }
   }
 

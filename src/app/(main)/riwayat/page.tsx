@@ -1,13 +1,11 @@
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireSession } from "@/lib/auth";
 import Link from "next/link";
 import { BarChart3 } from "lucide-react";
 import { examResult } from "@/lib/scoring";
 
 export default async function RiwayatPage() {
-  const session = await auth();
-  if (!session) redirect("/login");
+  const session = await requireSession();
 
   const exams = await db.exam.findMany({
     where: { userId: session.user.id, completedAt: { not: null } },

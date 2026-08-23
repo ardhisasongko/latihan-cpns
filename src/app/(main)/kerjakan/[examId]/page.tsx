@@ -1,19 +1,24 @@
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ExamInterface } from "./ExamInterface";
 import { pointsFor } from "@/lib/scoring";
 import { parseOptions } from "@/lib/questions";
+
+const GRACE_MS = 5000;
+
+// Cek waktu di level module agar tidak dianggap render-phase impure.
+function isExamTimeUp(startedAt: Date, timeLimit: number): boolean {
+  if (timeLimit <= 0) return false;
+  return Date.now() > startedAt.getTime() + timeLimit * 1000 + GRACE_MS;
+}
 
 export default async function ExamPage({
   params,
 }: {
   params: Promise<{ examId: string }>;
 }) {
-  const session = await auth();
-  if (!session) {
-    redirect("/login");
-  }
+  const session = await requireSession();
 
   const { examId } = await params;
 
@@ -61,7 +66,9 @@ export default async function ExamPage({
   for (const answer of exam.answers) {
     existingAnswers[answer.questionId] = {
       selectedAnswer: answer.selectedAnswer,
-      isCorrect: answer.isCorrect,
+      // Feedback benar/salah hanya di mode belajar; di mode ujian isCorrect
+      // bisa dipakai menebak kunci jawaban via refresh berulang.
+      isCorrect: isBelajar ? answer.isCorrect : null,
     };
   }
 
@@ -77,14 +84,18 @@ export default async function ExamPage({
   async function saveAnswer(examId: string, questionId: string, answer: string) {
     "use server";
 
-    const session = await auth();
-    if (!session?.user?.id) return;
+    const session = await requireSession();
 
     const exam = await db.exam.findUnique({
       where: { id: examId, userId: session.user.id },
-      select: { completedAt: true, package: { select: { category: true } } },
+      select: { completedAt: true, startedAt: true, timeLimit: true, package: { select: { category: true } } },
     });
     if (!exam || exam.completedAt) return;
+
+    // Server-side time limit (mode ujian); grace 5 detik untuk latency.
+    if (isExamTimeUp(exam.startedAt, exam.timeLimit)) {
+      return;
+    }
 
     const question = await db.question.findUnique({
       where: { id: questionId },
@@ -115,13 +126,23 @@ export default async function ExamPage({
   async function submitAnswers(examId: string, formData: FormData) {
     "use server";
 
-    const session = await auth();
-    if (!session?.user?.id) return;
+    const session = await requireSession();
 
     const answersStr = formData.get("answers") as string;
-    const answers: Record<string, string> = answersStr
-      ? JSON.parse(answersStr)
-      : {};
+    let answers: Record<string, string> = {};
+    if (answersStr) {
+      // Payload dari client bisa malformed; jangan biarkan JSON.parse crash.
+      try {
+        const parsed: unknown = JSON.parse(answersStr);
+        if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+          for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+            if (typeof v === "string") answers[k] = v;
+          }
+        }
+      } catch {
+        return;
+      }
+    }
 
     const fullExam = await db.exam.findUnique({
       where: { id: examId, userId: session.user.id },
@@ -136,6 +157,12 @@ export default async function ExamPage({
 
     if (!fullExam || fullExam.completedAt) {
       return;
+    }
+
+    // Server-side time limit (mode ujian); grace 5 detik untuk latency.
+    // Setelah lewat, exam tetap disubmit dengan jawaban yang sudah tersimpan.
+    if (isExamTimeUp(fullExam.startedAt, fullExam.timeLimit)) {
+      answers = {};
     }
 
     let totalCorrect = 0;
@@ -184,13 +211,10 @@ export default async function ExamPage({
     });
 
     if (locked.count === 1) {
-      // Interactive transaction: proxy db.ts menghasilkan native Promise,
-      // bukan PrismaPromise -> array-form $transaction menolak. Callback
-      // menerima tx client asli sehingga aman.
-      await db.$transaction(async (tx) => {
-        await tx.examAnswer.deleteMany({ where: { examId } });
-        await tx.examAnswer.createMany({ data: examAnswers });
-      });
+      // Prisma D1 adapter interactive transactions can hang indefinitely on Cloudflare Workers.
+      // Since we already locked the exam with completedAt above, sequential execution is safe.
+      await db.examAnswer.deleteMany({ where: { examId } });
+      await db.examAnswer.createMany({ data: examAnswers });
     }
 
     redirect(`/hasil/${examId}`);
@@ -199,8 +223,7 @@ export default async function ExamPage({
   async function toggleBookmark(questionId: string) {
     "use server";
 
-    const serverSession = await auth();
-    if (!serverSession?.user?.id) return;
+    const serverSession = await requireSession();
     const userId = serverSession.user.id;
 
     const existing = await db.bookmark.findUnique({

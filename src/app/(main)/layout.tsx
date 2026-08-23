@@ -1,5 +1,4 @@
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireSession } from "@/lib/auth";
 import { TriangleAlert } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -10,9 +9,7 @@ export default async function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
-  if (!session) redirect("/login");
+  const session = await requireSession();
 
   return (
     <ThemeProvider>

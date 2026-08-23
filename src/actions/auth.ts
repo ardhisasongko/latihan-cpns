@@ -2,8 +2,10 @@
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { z } from "zod";
 import { signOut } from "@/lib/auth";
+import { rateLimitAuth, getClientKey } from "@/lib/rateLimit";
 import { db } from "@/lib/db";
 
 const registerSchema = z.object({
@@ -20,6 +22,15 @@ export async function register(data: { name: string; email: string; password: st
 
   const { name, email, password } = validated.data;
   const normalizedEmail = email.toLowerCase().trim();
+
+  // Anti abuse: max 5 registrasi per IP per 5 menit.
+  try {
+    const hdrs = await headers();
+    const fakeReq = new Request("http://local", { headers: hdrs });
+    await rateLimitAuth(`register:${getClientKey(fakeReq)}`);
+  } catch {
+    return { error: "Terlalu banyak permintaan. Coba lagi nanti." };
+  }
 
   const existingUser = await db.user.findUnique({ where: { email: normalizedEmail } });
   if (existingUser) {

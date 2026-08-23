@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://latihan-cpns.ardhisasongko69.workers.dev"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://latihan-cpns.ardhisasongko69.workers.dev"
+  ),
   title: {
     template: "%s | Latihan CPNS",
     default: "Latihan CPNS - Soal & Kunci Jawaban",
@@ -39,10 +41,10 @@ export default function RootLayout({
         <script src="/theme-init.js" />
       </head>
       <body className="min-h-full flex flex-col">
-        <a href="#main-content" className="sr-only focus-not:hidden px-4 py-2 bg-primary text-primary-foreground rounded-md skip-link">
+        <a href="#main-content" className="sr-only focus:not-sr-only px-4 py-2 bg-primary text-primary-foreground rounded-md">
           Lewati ke konten utama
         </a>
-        <main id="main-content" className="flex-1 w-full">{children}</main>
+        <main id="main-content" tabIndex={-1} className="flex-1 w-full">{children}</main>
       </body>
     </html>
   );

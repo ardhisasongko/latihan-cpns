@@ -1,12 +1,10 @@
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireSession } from "@/lib/auth";
 import Link from "next/link";
 import { Bookmark as BookmarkIcon } from "lucide-react";
 
 export default async function BookmarkPage() {
-  const session = await auth();
-  if (!session) redirect("/login");
+  const session = await requireSession();
 
   const bookmarks = await db.bookmark.findMany({
     where: { userId: session.user.id },
@@ -25,8 +23,7 @@ export default async function BookmarkPage() {
 
   async function removeBookmark(formData: FormData) {
     "use server";
-    const session = await auth();
-    if (!session) redirect("/login");
+    const session = await requireSession();
 
     const bookmarkId = formData.get("bookmarkId") as string;
     await db.bookmark.deleteMany({

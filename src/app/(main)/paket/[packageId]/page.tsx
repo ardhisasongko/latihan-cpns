@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
+import { requireSession } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { BookOpen, Timer } from "lucide-react";
@@ -23,12 +23,12 @@ export default async function PackageDetailPage({
   async function createExam(formData: FormData) {
     "use server";
 
-    const session = await auth();
-    if (!session) {
-      redirect("/login");
-    }
+    const session = await requireSession();
 
     const mode = formData.get("mode") as string;
+    if (mode !== "belajar" && mode !== "ujian") {
+      return;
+    }
     // 60 detik per soal, sesuai proporsi ujian SKD asli (100 soal / 100 menit)
     const timeLimit = mode === "ujian" ? currentPkg.totalQuestions * 60 : 0;
 

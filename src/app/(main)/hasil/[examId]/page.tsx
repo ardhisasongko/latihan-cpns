@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
-import { auth } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
+import { requireSession } from "@/lib/auth";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { examResult } from "@/lib/scoring";
@@ -11,8 +11,7 @@ export default async function HasilPage({
 }: {
   params: Promise<{ examId: string }>;
 }) {
-  const session = await auth();
-  if (!session) redirect("/login");
+  const session = await requireSession();
 
   const { examId } = await params;
 

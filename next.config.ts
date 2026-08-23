@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           {
-            // CSP dinamis (nonce) di-set di src/middleware.ts
+            // CSP dinamis (nonce) di-set di src/proxy.ts
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
@@ -22,8 +22,13 @@ const nextConfig: NextConfig = {
             value: "nosniff",
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            // Hanya efektif via HTTPS; Cloudflare Workers sudah selalu HTTPS.
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
         ],
       },

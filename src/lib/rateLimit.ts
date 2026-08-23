@@ -13,16 +13,24 @@ const maxRequests = 20; // max requests per window per IP
 const ipMap = new Map<string, RateLimitInfo>();
 
 function getIP(req: Request): string {
-  // Try common headers
+  // Cloudflare menjamin keaslian header ini (client tidak bisa memalsukannya).
+  const cfIp = req.headers.get("cf-connecting-ip");
+  if (cfIp) return cfIp.trim();
+
+  // x-forwarded-for bisa berisi daftar; hop TERAKHIR adalah yang ditambahkan
+  // proxy terpercaya kita. Hop pertama dikendalikan client (bisa dipalsukan).
   const forwarded = req.headers.get("x-forwarded-for");
   if (forwarded) {
-    // x-forwarded-for can be a list, take the first
-    return forwarded.split(",")[0].trim();
+    const hops = forwarded.split(",").map((h) => h.trim()).filter(Boolean);
+    if (hops.length > 0) return hops[hops.length - 1];
   }
+
   const realIp = req.headers.get("x-real-ip");
   if (realIp) return realIp.trim();
-  // fallback (may be undefined in some environments)
-  return req.headers.get("host") || "unknown";
+
+  // Fail-closed: semua request tanpa IP yang bisa dipercaya masuk satu bucket,
+  // bukan bucket per-host yang bisa dirotasi client untuk bypass.
+  return "unknown";
 }
 
 function cleanup() {
@@ -37,7 +45,7 @@ function cleanup() {
 if (typeof setInterval !== "undefined") {
   try {
     setInterval(cleanup, windowMs);
-  } catch (e) {
+  } catch {
     // Ignore in edge environments where setInterval might be disabled
   }
 }
@@ -57,4 +65,25 @@ export async function rateLimit(request: Request, options: { limit?: number; win
     throw new Error(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
   }
   info.count += 1;
+}
+
+// Limiter khusus endpoint sensitif (login/register): lebih ketat dari default.
+// Key-nya kombinasi IP + email supaya serangan ke satu akun tidak mengunci semua user.
+export async function rateLimitAuth(requestKey: string, options: { limit?: number; windowMs?: number } = {}) {
+  const { limit = 5, windowMs: wMs = 5 * 60 * 1000 } = options;
+  const now = Date.now();
+  let info = ipMap.get(requestKey);
+  if (!info || now >= info.resetTime) {
+    info = { count: 0, resetTime: now + wMs };
+    ipMap.set(requestKey, info);
+  }
+  if (info.count >= limit) {
+    const retryAfter = Math.ceil((info.resetTime - now) / 1000);
+    throw new Error(`Rate limit exceeded. Retry after ${retryAfter} seconds`);
+  }
+  info.count += 1;
+}
+
+export function getClientKey(req: Request): string {
+  return getIP(req);
 }

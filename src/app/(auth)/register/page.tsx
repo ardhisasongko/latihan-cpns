@@ -21,23 +21,35 @@ export default function RegisterPage() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const result = await register({ name, email, password });
+    try {
+      const result = await register({ name, email, password });
 
-    if (result.error) {
-      setError(result.error);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      // Auto login after register
+      const signInResult = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        // Registrasi sukses tapi sesi gagal — arahkan login manual.
+        setError("Registrasi berhasil. Silakan masuk manual.");
+        router.push("/login");
+        return;
+      }
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      setError("Terjadi kesalahan saat pendaftaran. Coba lagi.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Auto login after register
-    await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-
-    router.push("/");
-    router.refresh();
   }
 
   return (
