@@ -8,6 +8,7 @@ type Question = {
   question: string;
   options: string[];
   correctAnswer?: string;
+  optionWeights?: Record<string, number>;
   explanation?: string;
   explanationSource?: string;
 };
@@ -310,7 +311,13 @@ export function ExamInterface({
           {currentQuestion.options.map((option, i) => {
             const letter = String.fromCharCode(65 + i);
             const isSelected = answers[currentQuestion.id] === letter;
-            const isCorrect = letter === currentQuestion.correctAnswer;
+            const weights = currentQuestion.optionWeights;
+            const hasWeights = !!weights && Object.keys(weights).length > 0;
+            // Opsi terbaik: bobot tertinggi utk TKP berbobot, kunci utk biner.
+            const bestLetter = hasWeights
+              ? Object.entries(weights!).sort((a, b) => b[1] - a[1])[0][0]
+              : currentQuestion.correctAnswer;
+            const isBest = letter === bestLetter;
             const showResult =
               mode === "belajar" && showFeedback[currentQuestion.id];
 
@@ -319,10 +326,12 @@ export function ExamInterface({
               optionClass = "border-primary bg-primary/10";
             }
             if (showResult) {
-              if (isCorrect) {
+              if (isBest) {
                 optionClass = "border-success bg-success/10";
-              } else if (isSelected && !isCorrect) {
-                optionClass = "border-danger bg-danger/10";
+              } else if (isSelected && !isBest) {
+                optionClass = hasWeights
+                  ? "border-warning bg-warning/10"
+                  : "border-danger bg-danger/10";
               }
             }
 
@@ -344,8 +353,18 @@ export function ExamInterface({
                   disabled={showResult}
                   className="mt-1"
                 />
-                <span>
+                <span className="flex-1">
                   <span className="font-medium">{letter}.</span> {option}
+                  {showResult && hasWeights && (
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      ({weights![letter]} poin)
+                    </span>
+                  )}
+                  {showResult && isBest && !isSelected && (
+                    <span className="ml-2 text-xs font-medium text-success">
+                      ← opsi terbaik
+                    </span>
+                  )}
                 </span>
               </label>
             );
@@ -355,25 +374,60 @@ export function ExamInterface({
         {/* Feedback for belajar mode */}
         {mode === "belajar" && showFeedback[currentQuestion.id] && (
           <div className="mt-6 p-4 rounded-lg bg-muted">
-            <div
-              className={`font-medium mb-2 flex items-center gap-1.5 ${
-                answers[currentQuestion.id] === currentQuestion.correctAnswer
-                  ? "text-success"
-                  : "text-danger"
-              }`}
-            >
-              {answers[currentQuestion.id] === currentQuestion.correctAnswer ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
-                  Jawaban Benar!
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-4 h-4" aria-hidden="true" />
-                  Jawaban Salah (Jawaban: {currentQuestion.correctAnswer})
-                </>
-              )}
-            </div>
+            {(() => {
+              const weights = currentQuestion.optionWeights;
+              const hasWeights = !!weights && Object.keys(weights).length > 0;
+              const chosen = answers[currentQuestion.id];
+              const bestLetter = hasWeights
+                ? Object.entries(weights!).sort((a, b) => b[1] - a[1])[0][0]
+                : currentQuestion.correctAnswer;
+              const isBest = chosen === bestLetter;
+
+              if (hasWeights) {
+                return (
+                  <div
+                    className={`font-medium mb-2 flex items-center gap-1.5 ${
+                      isBest ? "text-success" : "text-warning"
+                    }`}
+                  >
+                    {isBest ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                        Pilihan tepat! +{chosen ? weights![chosen] : 0} poin
+                      </>
+                    ) : (
+                      <>
+                        <XCircle className="w-4 h-4" aria-hidden="true" />
+                        +{chosen ? weights![chosen] ?? 0 : 0} poin · Opsi
+                        terbaik: {bestLetter} (+{weights![bestLetter!]})
+                      </>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  className={`font-medium mb-2 flex items-center gap-1.5 ${
+                    chosen === currentQuestion.correctAnswer
+                      ? "text-success"
+                      : "text-danger"
+                  }`}
+                >
+                  {chosen === currentQuestion.correctAnswer ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                      Jawaban Benar!
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-4 h-4" aria-hidden="true" />
+                      Jawaban Salah (Jawaban: {currentQuestion.correctAnswer})
+                    </>
+                  )}
+                </div>
+              );
+            })()}
             <div className="text-sm text-muted-foreground">
               <p className="mb-1 font-medium">Penjelasan:</p>
               <p className="whitespace-pre-wrap">

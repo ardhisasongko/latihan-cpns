@@ -3,8 +3,7 @@ import { requireSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
-import { examResult } from "@/lib/scoring";
-import { parseOptions } from "@/lib/questions";
+import { examResult, weightedExamResult, parseWeights } from "@/lib/scoring";import { parseOptions } from "@/lib/questions";
 
 export default async function HasilPage({
   params,
@@ -27,11 +26,16 @@ export default async function HasilPage({
 
   const category = exam.package.category;
   const totalQuestions = exam.package.totalQuestions;
-  const { rawScore, maxScore, passing, percentageScore, isLulus } = examResult(
-    category,
-    totalQuestions,
-    exam.totalCorrect || 0
-  );
+  // TKP berbobot: pakai total poin terkumpul; data lama / kategori lain: biner.
+  const hasAnyWeights = exam.answers.some((a) => {
+    const w = parseWeights(a.question.optionWeights);
+    return Object.keys(w).length > 0;
+  });
+  const isWeighted =
+    category === "TKP" && exam.earnedPoints != null && hasAnyWeights;
+  const { rawScore, maxScore, passing, percentageScore, isLulus } = isWeighted
+    ? weightedExamResult(totalQuestions, exam.earnedPoints!)
+    : examResult(category, totalQuestions, exam.totalCorrect || 0);
 
   const questionAnswers = await db.packageQuestion.findMany({
     where: { packageId: exam.packageId },
@@ -127,6 +131,12 @@ export default async function HasilPage({
           const userAnswer = answer?.selectedAnswer || null;
           const isCorrect = answer?.isCorrect ?? false;
           const options = parseOptions(pq.question.options);
+          const weights = parseWeights(pq.question.optionWeights);
+          const hasWeights = Object.keys(weights).length > 0;
+          const bestLetter = hasWeights
+            ? Object.entries(weights).sort((a, b) => b[1] - a[1])[0][0]
+            : pq.question.correctAnswer;
+          const earnedThis = answer?.score ?? 0;
 
           return (
             <div
@@ -139,14 +149,26 @@ export default async function HasilPage({
                 </span>
                 <span
                   className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    isCorrect
-                      ? "bg-success/10 text-success"
-                      : userAnswer
-                        ? "bg-danger/10 text-danger"
+                    hasWeights
+                      ? userAnswer
+                        ? isCorrect
+                          ? "bg-success/10 text-success"
+                          : "bg-warning/10 text-warning"
                         : "bg-warning/10 text-warning"
+                      : isCorrect
+                        ? "bg-success/10 text-success"
+                        : userAnswer
+                          ? "bg-danger/10 text-danger"
+                          : "bg-warning/10 text-warning"
                   }`}
                 >
-                  {isCorrect ? "Benar" : userAnswer ? "Salah" : "Kosong"}
+                  {hasWeights && userAnswer
+                    ? `+${earnedThis} poin`
+                    : isCorrect
+                      ? "Benar"
+                      : userAnswer
+                        ? "Salah"
+                        : "Kosong"}
                 </span>
               </div>
 
@@ -155,14 +177,16 @@ export default async function HasilPage({
               <div className="space-y-2 mb-4">
                 {options.map((option, i) => {
                   const letter = String.fromCharCode(65 + i);
-                  const isThisCorrect = letter === pq.question.correctAnswer;
+                  const isThisBest = letter === bestLetter;
                   const isThisUserAnswer = letter === userAnswer;
 
                   let optionClass = "border-border";
-                  if (isThisCorrect) {
+                  if (isThisBest) {
                     optionClass = "border-success/40 bg-success/10";
-                  } else if (isThisUserAnswer && !isCorrect) {
-                    optionClass = "border-danger/40 bg-danger/10";
+                  } else if (isThisUserAnswer) {
+                    optionClass = hasWeights
+                      ? "border-warning/40 bg-warning/10"
+                      : "border-danger/40 bg-danger/10";
                   }
 
                   return (
@@ -172,11 +196,16 @@ export default async function HasilPage({
                     >
                       <span className="font-medium text-sm">{letter}.</span>
                       <span className="text-sm flex-1">{option}</span>
-                      {isThisCorrect && (
-                        <Check className="w-4 h-4 text-success shrink-0" aria-label="Jawaban benar" />
+                      {hasWeights && (
+                        <span className="text-xs text-muted-foreground shrink-0">
+                          {weights[letter]} poin
+                        </span>
                       )}
-                      {isThisUserAnswer && !isThisCorrect && (
-                        <X className="w-4 h-4 text-danger shrink-0" aria-label="Jawaban salah" />
+                      {isThisBest && (
+                        <Check className="w-4 h-4 text-success shrink-0" aria-label="Opsi terbaik" />
+                      )}
+                      {isThisUserAnswer && !isThisBest && (
+                        <X className="w-4 h-4 text-danger shrink-0" aria-label="Jawaban kamu" />
                       )}
                     </div>
                   );
@@ -188,16 +217,17 @@ export default async function HasilPage({
                   <span className="text-muted-foreground">Jawaban kamu: </span>
                   <span
                     className={`font-medium ${
-                      isCorrect ? "text-success" : "text-danger"
+                      isCorrect ? "text-success" : hasWeights ? "text-warning" : "text-danger"
                     }`}
                   >
                     {userAnswer}
+                    {hasWeights && ` (+${earnedThis} poin)`}
                   </span>
                   {!isCorrect && (
                     <>
-                      <span className="text-muted-foreground"> · Kunci: </span>
+                      <span className="text-muted-foreground"> · {hasWeights ? "Opsi terbaik" : "Kunci"}: </span>
                       <span className="font-medium text-success">
-                        {pq.question.correctAnswer}
+                        {bestLetter}
                       </span>
                     </>
                   )}
@@ -208,9 +238,9 @@ export default async function HasilPage({
                 <div className="text-sm mb-3">
                   <span className="text-muted-foreground">Jawaban: </span>
                   <span className="font-medium text-warning">Kosong</span>
-                  <span className="text-muted-foreground"> · Kunci: </span>
+                  <span className="text-muted-foreground"> · {hasWeights ? "Opsi terbaik" : "Kunci"}: </span>
                   <span className="font-medium text-success">
-                    {pq.question.correctAnswer}
+                    {bestLetter}
                   </span>
                 </div>
               )}

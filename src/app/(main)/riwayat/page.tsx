@@ -2,7 +2,24 @@ import { db } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import Link from "next/link";
 import { BarChart3 } from "lucide-react";
-import { examResult } from "@/lib/scoring";
+import { examResult, weightedExamResult } from "@/lib/scoring";
+
+// Hasil utk satu exam: TKP dgn earnedPoints (exam baru) = berbobot,
+// selain itu biner. Riwayat tidak memuat soal, jadi pakai heuristic ini.
+function resultFor(exam: {
+  package: { category: string; totalQuestions: number };
+  earnedPoints: number | null;
+  totalCorrect: number | null;
+}) {
+  if (exam.package.category === "TKP" && exam.earnedPoints != null) {
+    return weightedExamResult(exam.package.totalQuestions, exam.earnedPoints);
+  }
+  return examResult(
+    exam.package.category,
+    exam.package.totalQuestions,
+    exam.totalCorrect || 0
+  );
+}
 
 export default async function RiwayatPage() {
   const session = await requireSession();
@@ -23,7 +40,7 @@ export default async function RiwayatPage() {
     const cat = exam.package.category;
     if (!stats[cat]) stats[cat] = { total: 0, lulus: 0, totalScore: 0 };
     stats[cat].total++;
-    const { isLulus } = examResult(cat, exam.package.totalQuestions, exam.totalCorrect || 0);
+    const { isLulus } = resultFor(exam);
     if (isLulus) stats[cat].lulus++;
     stats[cat].totalScore += exam.score || 0;
   }
@@ -79,11 +96,7 @@ export default async function RiwayatPage() {
         <div className="space-y-3">
           {exams.map((exam: (typeof exams)[number]) => {
             const cat = exam.package.category;
-            const { rawScore, maxScore, percentageScore, isLulus } = examResult(
-              cat,
-              exam.package.totalQuestions,
-              exam.totalCorrect || 0
-            );
+            const { rawScore, maxScore, percentageScore, isLulus } = resultFor(exam);
 
             return (
               <Link

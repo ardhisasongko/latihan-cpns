@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ExamInterface } from "./ExamInterface";
-import { pointsFor } from "@/lib/scoring";
+import { answerScore, maxScorePerQuestion, parseWeights } from "@/lib/scoring";
 import { parseOptions } from "@/lib/questions";
 
 const GRACE_MS = 5000;
@@ -52,9 +52,10 @@ export default async function ExamPage({
     id: pq.question.id,
     question: pq.question.question,
     options: parseOptions(pq.question.options),
-    // Kunci jawaban & pembahasan hanya dikirim di mode belajar.
+    // Kunci jawaban, bobot opsi & pembahasan hanya dikirim di mode belajar.
     // Di mode ujian dicegah agar tidak bisa diintip lewat devtools sebelum submit.
     correctAnswer: isBelajar ? pq.question.correctAnswer : undefined,
+    optionWeights: isBelajar ? parseWeights(pq.question.optionWeights) : undefined,
     explanation: isBelajar ? pq.question.explanation : undefined,
     explanationSource: isBelajar ? pq.question.explanationSource : undefined,
   }));
@@ -104,18 +105,26 @@ export default async function ExamPage({
       where: {
         packageId_questionId: { packageId: exam.packageId, questionId },
       },
-      include: { question: { select: { correctAnswer: true, category: true } } },
+      include: {
+        question: { select: { correctAnswer: true, category: true, optionWeights: true } },
+      },
     });
     if (!pq) return;
 
     const isCorrect = answer === pq.question.correctAnswer;
+    const score = answerScore(
+      exam.package.category,
+      pq.question.optionWeights,
+      answer,
+      pq.question.correctAnswer
+    );
 
     await db.examAnswer.upsert({
       where: { examId_questionId: { examId, questionId } },
       update: {
         selectedAnswer: answer,
         isCorrect,
-        score: isCorrect ? pointsFor(pq.question.category) : 0,
+        score,
         answeredAt: new Date(),
       },
       create: {
@@ -123,7 +132,7 @@ export default async function ExamPage({
         questionId,
         selectedAnswer: answer,
         isCorrect,
-        score: isCorrect ? pointsFor(pq.question.category) : 0,
+        score,
       },
     });
   }
@@ -173,12 +182,24 @@ export default async function ExamPage({
     let totalCorrect = 0;
     let totalWrong = 0;
     let totalSkipped = 0;
+    let earnedPoints = 0;
+    let maxPossible = 0;
 
     const examAnswers = fullExam.package.questions.map(
       (pq: (typeof fullExam.package.questions)[number]) => {
         const selectedAnswer = answers[pq.question.id] || null;
         const isCorrect = selectedAnswer === pq.question.correctAnswer;
-        const score = isCorrect ? pointsFor(pq.question.category) : 0;
+        const score = answerScore(
+          fullExam.package.category,
+          pq.question.optionWeights,
+          selectedAnswer,
+          pq.question.correctAnswer
+        );
+        earnedPoints += score;
+        maxPossible += maxScorePerQuestion(
+          fullExam.package.category,
+          pq.question.optionWeights
+        );
 
         if (selectedAnswer === null) {
           totalSkipped++;
@@ -198,9 +219,10 @@ export default async function ExamPage({
       }
     );
 
-    const totalQuestions = fullExam.package.questions.length;
-    const score = totalQuestions > 0
-      ? Math.round((totalCorrect / totalQuestions) * 100)
+    // Persentase dari poin terkumpul — identik dgn rumus lama utk biner,
+    // dan benar utk TKP berbobot (poin parsial ikut terhitung).
+    const score = maxPossible > 0
+      ? Math.round((earnedPoints / maxPossible) * 100)
       : 0;
 
     // Atomic: kunci exam dulu, lalu timpa jawaban dengan state client terakhir
@@ -212,6 +234,7 @@ export default async function ExamPage({
         totalCorrect,
         totalWrong,
         totalSkipped,
+        earnedPoints,
       },
     });
 

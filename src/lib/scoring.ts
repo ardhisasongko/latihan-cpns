@@ -37,6 +37,25 @@ export function examResult(category: string, totalQuestions: number, totalCorrec
   return { rawScore, maxScore, passing, percentageScore, isLulus: totalCorrect >= requiredCorrect(category, totalQuestions) };
 }
 
+// Skor satu jawaban untuk semua kategori:
+// - TKP berbobot -> bobot opsi; TKP tanpa bobot / TWK / TIU -> biner.
+export function answerScore(
+  category: string,
+  optionWeights: string | null | undefined,
+  selected: string | null,
+  correctAnswer: string
+): number {
+  if (!selected) return 0;
+  if (category === "TKP") return tkpScore(optionWeights, selected, correctAnswer).score;
+  return selected === correctAnswer ? pointsFor(category) : 0;
+}
+
+// Bobot maksimal satu soal utk penjumlahan skor maksimum paket.
+export function maxScorePerQuestion(category: string, optionWeights: string | null | undefined): number {
+  if (category === "TKP" && Object.keys(parseWeights(optionWeights)).length > 0) return 5;
+  return pointsFor(category);
+}
+
 // ===== Skoring TKP berbobot (opsi bernilai 1-5, tidak ada jawaban "salah") =====
 
 export function parseWeights(raw: string | null | undefined): Record<string, number> {
