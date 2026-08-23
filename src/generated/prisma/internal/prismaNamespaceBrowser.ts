@@ -91,6 +91,7 @@ export const QuestionScalarFieldEnum = {
   question: 'question',
   options: 'options',
   correctAnswer: 'correctAnswer',
+  optionWeights: 'optionWeights',
   explanation: 'explanation',
   explanationSource: 'explanationSource'
 } as const
@@ -131,6 +132,7 @@ export const ExamScalarFieldEnum = {
   totalCorrect: 'totalCorrect',
   totalWrong: 'totalWrong',
   totalSkipped: 'totalSkipped',
+  earnedPoints: 'earnedPoints',
   timeLimit: 'timeLimit',
   startedAt: 'startedAt',
   completedAt: 'completedAt'

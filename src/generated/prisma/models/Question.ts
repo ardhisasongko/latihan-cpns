@@ -33,6 +33,7 @@ export type QuestionMinAggregateOutputType = {
   question: string | null
   options: string | null
   correctAnswer: string | null
+  optionWeights: string | null
   explanation: string | null
   explanationSource: string | null
 }
@@ -46,6 +47,7 @@ export type QuestionMaxAggregateOutputType = {
   question: string | null
   options: string | null
   correctAnswer: string | null
+  optionWeights: string | null
   explanation: string | null
   explanationSource: string | null
 }
@@ -59,6 +61,7 @@ export type QuestionCountAggregateOutputType = {
   question: number
   options: number
   correctAnswer: number
+  optionWeights: number
   explanation: number
   explanationSource: number
   _all: number
@@ -74,6 +77,7 @@ export type QuestionMinAggregateInputType = {
   question?: true
   options?: true
   correctAnswer?: true
+  optionWeights?: true
   explanation?: true
   explanationSource?: true
 }
@@ -87,6 +91,7 @@ export type QuestionMaxAggregateInputType = {
   question?: true
   options?: true
   correctAnswer?: true
+  optionWeights?: true
   explanation?: true
   explanationSource?: true
 }
@@ -100,6 +105,7 @@ export type QuestionCountAggregateInputType = {
   question?: true
   options?: true
   correctAnswer?: true
+  optionWeights?: true
   explanation?: true
   explanationSource?: true
   _all?: true
@@ -186,6 +192,7 @@ export type QuestionGroupByOutputType = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights: string | null
   explanation: string
   explanationSource: string
   _count: QuestionCountAggregateOutputType | null
@@ -220,6 +227,7 @@ export type QuestionWhereInput = {
   question?: Prisma.StringFilter<"Question"> | string
   options?: Prisma.StringFilter<"Question"> | string
   correctAnswer?: Prisma.StringFilter<"Question"> | string
+  optionWeights?: Prisma.StringNullableFilter<"Question"> | string | null
   explanation?: Prisma.StringFilter<"Question"> | string
   explanationSource?: Prisma.StringFilter<"Question"> | string
   examAnswers?: Prisma.ExamAnswerListRelationFilter
@@ -236,6 +244,7 @@ export type QuestionOrderByWithRelationInput = {
   question?: Prisma.SortOrder
   options?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
+  optionWeights?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrder
   explanationSource?: Prisma.SortOrder
   examAnswers?: Prisma.ExamAnswerOrderByRelationAggregateInput
@@ -255,6 +264,7 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   question?: Prisma.StringFilter<"Question"> | string
   options?: Prisma.StringFilter<"Question"> | string
   correctAnswer?: Prisma.StringFilter<"Question"> | string
+  optionWeights?: Prisma.StringNullableFilter<"Question"> | string | null
   explanation?: Prisma.StringFilter<"Question"> | string
   explanationSource?: Prisma.StringFilter<"Question"> | string
   examAnswers?: Prisma.ExamAnswerListRelationFilter
@@ -271,6 +281,7 @@ export type QuestionOrderByWithAggregationInput = {
   question?: Prisma.SortOrder
   options?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
+  optionWeights?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrder
   explanationSource?: Prisma.SortOrder
   _count?: Prisma.QuestionCountOrderByAggregateInput
@@ -290,6 +301,7 @@ export type QuestionScalarWhereWithAggregatesInput = {
   question?: Prisma.StringWithAggregatesFilter<"Question"> | string
   options?: Prisma.StringWithAggregatesFilter<"Question"> | string
   correctAnswer?: Prisma.StringWithAggregatesFilter<"Question"> | string
+  optionWeights?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   explanation?: Prisma.StringWithAggregatesFilter<"Question"> | string
   explanationSource?: Prisma.StringWithAggregatesFilter<"Question"> | string
 }
@@ -303,6 +315,7 @@ export type QuestionCreateInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerCreateNestedManyWithoutQuestionInput
@@ -319,6 +332,7 @@ export type QuestionUncheckedCreateInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerUncheckedCreateNestedManyWithoutQuestionInput
@@ -335,6 +349,7 @@ export type QuestionUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUpdateManyWithoutQuestionNestedInput
@@ -351,6 +366,7 @@ export type QuestionUncheckedUpdateInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUncheckedUpdateManyWithoutQuestionNestedInput
@@ -367,6 +383,7 @@ export type QuestionCreateManyInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
 }
@@ -380,6 +397,7 @@ export type QuestionUpdateManyMutationInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -393,6 +411,7 @@ export type QuestionUncheckedUpdateManyInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -406,6 +425,7 @@ export type QuestionCountOrderByAggregateInput = {
   question?: Prisma.SortOrder
   options?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
+  optionWeights?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   explanationSource?: Prisma.SortOrder
 }
@@ -419,6 +439,7 @@ export type QuestionMaxOrderByAggregateInput = {
   question?: Prisma.SortOrder
   options?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
+  optionWeights?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   explanationSource?: Prisma.SortOrder
 }
@@ -432,6 +453,7 @@ export type QuestionMinOrderByAggregateInput = {
   question?: Prisma.SortOrder
   options?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
+  optionWeights?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
   explanationSource?: Prisma.SortOrder
 }
@@ -492,6 +514,7 @@ export type QuestionCreateWithoutPackageQuestionsInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerCreateNestedManyWithoutQuestionInput
@@ -507,6 +530,7 @@ export type QuestionUncheckedCreateWithoutPackageQuestionsInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerUncheckedCreateNestedManyWithoutQuestionInput
@@ -538,6 +562,7 @@ export type QuestionUpdateWithoutPackageQuestionsInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUpdateManyWithoutQuestionNestedInput
@@ -553,6 +578,7 @@ export type QuestionUncheckedUpdateWithoutPackageQuestionsInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUncheckedUpdateManyWithoutQuestionNestedInput
@@ -568,6 +594,7 @@ export type QuestionCreateWithoutExamAnswersInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   bookmarks?: Prisma.BookmarkCreateNestedManyWithoutQuestionInput
@@ -583,6 +610,7 @@ export type QuestionUncheckedCreateWithoutExamAnswersInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   bookmarks?: Prisma.BookmarkUncheckedCreateNestedManyWithoutQuestionInput
@@ -614,6 +642,7 @@ export type QuestionUpdateWithoutExamAnswersInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   bookmarks?: Prisma.BookmarkUpdateManyWithoutQuestionNestedInput
@@ -629,6 +658,7 @@ export type QuestionUncheckedUpdateWithoutExamAnswersInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   bookmarks?: Prisma.BookmarkUncheckedUpdateManyWithoutQuestionNestedInput
@@ -644,6 +674,7 @@ export type QuestionCreateWithoutBookmarksInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerCreateNestedManyWithoutQuestionInput
@@ -659,6 +690,7 @@ export type QuestionUncheckedCreateWithoutBookmarksInput = {
   question: string
   options: string
   correctAnswer: string
+  optionWeights?: string | null
   explanation: string
   explanationSource: string
   examAnswers?: Prisma.ExamAnswerUncheckedCreateNestedManyWithoutQuestionInput
@@ -690,6 +722,7 @@ export type QuestionUpdateWithoutBookmarksInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUpdateManyWithoutQuestionNestedInput
@@ -705,6 +738,7 @@ export type QuestionUncheckedUpdateWithoutBookmarksInput = {
   question?: Prisma.StringFieldUpdateOperationsInput | string
   options?: Prisma.StringFieldUpdateOperationsInput | string
   correctAnswer?: Prisma.StringFieldUpdateOperationsInput | string
+  optionWeights?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   explanationSource?: Prisma.StringFieldUpdateOperationsInput | string
   examAnswers?: Prisma.ExamAnswerUncheckedUpdateManyWithoutQuestionNestedInput
@@ -769,6 +803,7 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   question?: boolean
   options?: boolean
   correctAnswer?: boolean
+  optionWeights?: boolean
   explanation?: boolean
   explanationSource?: boolean
   examAnswers?: boolean | Prisma.Question$examAnswersArgs<ExtArgs>
@@ -786,6 +821,7 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   question?: boolean
   options?: boolean
   correctAnswer?: boolean
+  optionWeights?: boolean
   explanation?: boolean
   explanationSource?: boolean
 }, ExtArgs["result"]["question"]>
@@ -799,6 +835,7 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   question?: boolean
   options?: boolean
   correctAnswer?: boolean
+  optionWeights?: boolean
   explanation?: boolean
   explanationSource?: boolean
 }, ExtArgs["result"]["question"]>
@@ -812,11 +849,12 @@ export type QuestionSelectScalar = {
   question?: boolean
   options?: boolean
   correctAnswer?: boolean
+  optionWeights?: boolean
   explanation?: boolean
   explanationSource?: boolean
 }
 
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "category" | "subcategory" | "difficulty" | "cognitiveLevel" | "question" | "options" | "correctAnswer" | "explanation" | "explanationSource", ExtArgs["result"]["question"]>
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "category" | "subcategory" | "difficulty" | "cognitiveLevel" | "question" | "options" | "correctAnswer" | "optionWeights" | "explanation" | "explanationSource", ExtArgs["result"]["question"]>
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examAnswers?: boolean | Prisma.Question$examAnswersArgs<ExtArgs>
   bookmarks?: boolean | Prisma.Question$bookmarksArgs<ExtArgs>
@@ -842,6 +880,7 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     question: string
     options: string
     correctAnswer: string
+    optionWeights: string | null
     explanation: string
     explanationSource: string
   }, ExtArgs["result"]["question"]>
@@ -1278,6 +1317,7 @@ export interface QuestionFieldRefs {
   readonly question: Prisma.FieldRef<"Question", 'String'>
   readonly options: Prisma.FieldRef<"Question", 'String'>
   readonly correctAnswer: Prisma.FieldRef<"Question", 'String'>
+  readonly optionWeights: Prisma.FieldRef<"Question", 'String'>
   readonly explanation: Prisma.FieldRef<"Question", 'String'>
   readonly explanationSource: Prisma.FieldRef<"Question", 'String'>
 }

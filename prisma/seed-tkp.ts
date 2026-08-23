@@ -1,4 +1,4 @@
-export const tkpQuestions = [
+const rawTkpQuestions = [
   // ============================================================
   // 1. PELAYANAN PUBLIK (40 soal)
   // ============================================================
@@ -4138,3 +4138,20 @@ export const tkpQuestions = [
     explanationSource: "Core values ASN: Loyal, Harmonis"
   }
 ];
+
+// Bobot opsi TKP (1-5): kunci = 5; sisanya 3/2/2/1 mengikuti urutan opsi.
+// Deterministik — seed hanya menulis satu jawaban "terbaik" per soal.
+function weightsFor(correctAnswer: string): string {
+  const pool = [3, 2, 2, 1];
+  const weights: Record<string, number> = {};
+  let p = 0;
+  for (const letter of ["A", "B", "C", "D", "E"]) {
+    weights[letter] = letter === correctAnswer ? 5 : (pool[p++] ?? 1);
+  }
+  return JSON.stringify(weights);
+}
+
+export const tkpQuestions = rawTkpQuestions.map((q) => ({
+  ...q,
+  optionWeights: weightsFor(q.correctAnswer),
+}));

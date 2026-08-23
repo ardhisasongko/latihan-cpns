@@ -5,6 +5,8 @@ import { tkpQuestions } from "./seed-tkp";
 
 process.loadEnvFile();
 
+// CATATAN: client di-generate dengan runtime workerd — tidak jalan di Node.
+// Jalur seeding yang aktif: gen-seed-sql.ts -> file .sql -> apply ke DB.
 const prisma = new PrismaClient();
 
 function shuffle<T>(array: T[]): T[] {

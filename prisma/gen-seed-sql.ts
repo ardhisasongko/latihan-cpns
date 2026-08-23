@@ -38,14 +38,15 @@ type Q = (typeof twkQuestions)[number];
 const all: Q[] = [...twkQuestions, ...tiuQuestions, ...tkpQuestions];
 
 all.forEach((q, i) => {
+  const qw = (q as { optionWeights?: string }).optionWeights;
   sql.push(
-    `INSERT INTO Question (id, category, subcategory, difficulty, cognitiveLevel, question, options, correctAnswer, explanation, explanationSource) VALUES (${esc(
+    `INSERT INTO Question (id, category, subcategory, difficulty, cognitiveLevel, question, options, correctAnswer, optionWeights, explanation, explanationSource) VALUES (${esc(
       `q-${q.category}-${i}`
     )}, ${esc(q.category)}, ${esc(q.subcategory)}, ${esc(q.difficulty)}, ${esc(
       q.cognitiveLevel
     )}, ${esc(q.question)}, ${esc(q.options)}, ${esc(q.correctAnswer)}, ${esc(
-      q.explanation
-    )}, ${esc(q.explanationSource)});`
+      qw ?? null
+    )}, ${esc(q.explanation)}, ${esc(q.explanationSource)});`
   );
 });
 

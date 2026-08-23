@@ -31,6 +31,7 @@ export type ExamAvgAggregateOutputType = {
   totalCorrect: number | null
   totalWrong: number | null
   totalSkipped: number | null
+  earnedPoints: number | null
   timeLimit: number | null
 }
 
@@ -39,6 +40,7 @@ export type ExamSumAggregateOutputType = {
   totalCorrect: number | null
   totalWrong: number | null
   totalSkipped: number | null
+  earnedPoints: number | null
   timeLimit: number | null
 }
 
@@ -51,6 +53,7 @@ export type ExamMinAggregateOutputType = {
   totalCorrect: number | null
   totalWrong: number | null
   totalSkipped: number | null
+  earnedPoints: number | null
   timeLimit: number | null
   startedAt: Date | null
   completedAt: Date | null
@@ -65,6 +68,7 @@ export type ExamMaxAggregateOutputType = {
   totalCorrect: number | null
   totalWrong: number | null
   totalSkipped: number | null
+  earnedPoints: number | null
   timeLimit: number | null
   startedAt: Date | null
   completedAt: Date | null
@@ -79,6 +83,7 @@ export type ExamCountAggregateOutputType = {
   totalCorrect: number
   totalWrong: number
   totalSkipped: number
+  earnedPoints: number
   timeLimit: number
   startedAt: number
   completedAt: number
@@ -91,6 +96,7 @@ export type ExamAvgAggregateInputType = {
   totalCorrect?: true
   totalWrong?: true
   totalSkipped?: true
+  earnedPoints?: true
   timeLimit?: true
 }
 
@@ -99,6 +105,7 @@ export type ExamSumAggregateInputType = {
   totalCorrect?: true
   totalWrong?: true
   totalSkipped?: true
+  earnedPoints?: true
   timeLimit?: true
 }
 
@@ -111,6 +118,7 @@ export type ExamMinAggregateInputType = {
   totalCorrect?: true
   totalWrong?: true
   totalSkipped?: true
+  earnedPoints?: true
   timeLimit?: true
   startedAt?: true
   completedAt?: true
@@ -125,6 +133,7 @@ export type ExamMaxAggregateInputType = {
   totalCorrect?: true
   totalWrong?: true
   totalSkipped?: true
+  earnedPoints?: true
   timeLimit?: true
   startedAt?: true
   completedAt?: true
@@ -139,6 +148,7 @@ export type ExamCountAggregateInputType = {
   totalCorrect?: true
   totalWrong?: true
   totalSkipped?: true
+  earnedPoints?: true
   timeLimit?: true
   startedAt?: true
   completedAt?: true
@@ -240,6 +250,7 @@ export type ExamGroupByOutputType = {
   totalCorrect: number | null
   totalWrong: number | null
   totalSkipped: number | null
+  earnedPoints: number | null
   timeLimit: number
   startedAt: Date
   completedAt: Date | null
@@ -277,6 +288,7 @@ export type ExamWhereInput = {
   totalCorrect?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalWrong?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalSkipped?: Prisma.IntNullableFilter<"Exam"> | number | null
+  earnedPoints?: Prisma.IntNullableFilter<"Exam"> | number | null
   timeLimit?: Prisma.IntFilter<"Exam"> | number
   startedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Exam"> | Date | string | null
@@ -294,6 +306,7 @@ export type ExamOrderByWithRelationInput = {
   totalCorrect?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWrong?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSkipped?: Prisma.SortOrderInput | Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrderInput | Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,6 +327,7 @@ export type ExamWhereUniqueInput = Prisma.AtLeast<{
   totalCorrect?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalWrong?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalSkipped?: Prisma.IntNullableFilter<"Exam"> | number | null
+  earnedPoints?: Prisma.IntNullableFilter<"Exam"> | number | null
   timeLimit?: Prisma.IntFilter<"Exam"> | number
   startedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Exam"> | Date | string | null
@@ -331,6 +345,7 @@ export type ExamOrderByWithAggregationInput = {
   totalCorrect?: Prisma.SortOrderInput | Prisma.SortOrder
   totalWrong?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSkipped?: Prisma.SortOrderInput | Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrderInput | Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -353,6 +368,7 @@ export type ExamScalarWhereWithAggregatesInput = {
   totalCorrect?: Prisma.IntNullableWithAggregatesFilter<"Exam"> | number | null
   totalWrong?: Prisma.IntNullableWithAggregatesFilter<"Exam"> | number | null
   totalSkipped?: Prisma.IntNullableWithAggregatesFilter<"Exam"> | number | null
+  earnedPoints?: Prisma.IntNullableWithAggregatesFilter<"Exam"> | number | null
   timeLimit?: Prisma.IntWithAggregatesFilter<"Exam"> | number
   startedAt?: Prisma.DateTimeWithAggregatesFilter<"Exam"> | Date | string
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Exam"> | Date | string | null
@@ -365,6 +381,7 @@ export type ExamCreateInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -382,6 +399,7 @@ export type ExamUncheckedCreateInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -395,6 +413,7 @@ export type ExamUpdateInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -412,6 +431,7 @@ export type ExamUncheckedUpdateInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -427,6 +447,7 @@ export type ExamCreateManyInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -439,6 +460,7 @@ export type ExamUpdateManyMutationInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -453,6 +475,7 @@ export type ExamUncheckedUpdateManyInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -477,6 +500,7 @@ export type ExamCountOrderByAggregateInput = {
   totalCorrect?: Prisma.SortOrder
   totalWrong?: Prisma.SortOrder
   totalSkipped?: Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -487,6 +511,7 @@ export type ExamAvgOrderByAggregateInput = {
   totalCorrect?: Prisma.SortOrder
   totalWrong?: Prisma.SortOrder
   totalSkipped?: Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
 }
 
@@ -499,6 +524,7 @@ export type ExamMaxOrderByAggregateInput = {
   totalCorrect?: Prisma.SortOrder
   totalWrong?: Prisma.SortOrder
   totalSkipped?: Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -513,6 +539,7 @@ export type ExamMinOrderByAggregateInput = {
   totalCorrect?: Prisma.SortOrder
   totalWrong?: Prisma.SortOrder
   totalSkipped?: Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
   startedAt?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
@@ -523,6 +550,7 @@ export type ExamSumOrderByAggregateInput = {
   totalCorrect?: Prisma.SortOrder
   totalWrong?: Prisma.SortOrder
   totalSkipped?: Prisma.SortOrder
+  earnedPoints?: Prisma.SortOrder
   timeLimit?: Prisma.SortOrder
 }
 
@@ -648,6 +676,7 @@ export type ExamCreateWithoutUserInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -663,6 +692,7 @@ export type ExamUncheckedCreateWithoutUserInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -706,6 +736,7 @@ export type ExamScalarWhereInput = {
   totalCorrect?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalWrong?: Prisma.IntNullableFilter<"Exam"> | number | null
   totalSkipped?: Prisma.IntNullableFilter<"Exam"> | number | null
+  earnedPoints?: Prisma.IntNullableFilter<"Exam"> | number | null
   timeLimit?: Prisma.IntFilter<"Exam"> | number
   startedAt?: Prisma.DateTimeFilter<"Exam"> | Date | string
   completedAt?: Prisma.DateTimeNullableFilter<"Exam"> | Date | string | null
@@ -718,6 +749,7 @@ export type ExamCreateWithoutPackageInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -733,6 +765,7 @@ export type ExamUncheckedCreateWithoutPackageInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -771,6 +804,7 @@ export type ExamCreateWithoutAnswersInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -787,6 +821,7 @@ export type ExamUncheckedCreateWithoutAnswersInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -815,6 +850,7 @@ export type ExamUpdateWithoutAnswersInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -831,6 +867,7 @@ export type ExamUncheckedUpdateWithoutAnswersInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -844,6 +881,7 @@ export type ExamCreateManyUserInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -856,6 +894,7 @@ export type ExamUpdateWithoutUserInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -871,6 +910,7 @@ export type ExamUncheckedUpdateWithoutUserInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -885,6 +925,7 @@ export type ExamUncheckedUpdateManyWithoutUserInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -898,6 +939,7 @@ export type ExamCreateManyPackageInput = {
   totalCorrect?: number | null
   totalWrong?: number | null
   totalSkipped?: number | null
+  earnedPoints?: number | null
   timeLimit: number
   startedAt?: Date | string
   completedAt?: Date | string | null
@@ -910,6 +952,7 @@ export type ExamUpdateWithoutPackageInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -925,6 +968,7 @@ export type ExamUncheckedUpdateWithoutPackageInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -939,6 +983,7 @@ export type ExamUncheckedUpdateManyWithoutPackageInput = {
   totalCorrect?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalWrong?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalSkipped?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  earnedPoints?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   timeLimit?: Prisma.IntFieldUpdateOperationsInput | number
   startedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -984,6 +1029,7 @@ export type ExamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   totalCorrect?: boolean
   totalWrong?: boolean
   totalSkipped?: boolean
+  earnedPoints?: boolean
   timeLimit?: boolean
   startedAt?: boolean
   completedAt?: boolean
@@ -1002,6 +1048,7 @@ export type ExamSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totalCorrect?: boolean
   totalWrong?: boolean
   totalSkipped?: boolean
+  earnedPoints?: boolean
   timeLimit?: boolean
   startedAt?: boolean
   completedAt?: boolean
@@ -1018,6 +1065,7 @@ export type ExamSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   totalCorrect?: boolean
   totalWrong?: boolean
   totalSkipped?: boolean
+  earnedPoints?: boolean
   timeLimit?: boolean
   startedAt?: boolean
   completedAt?: boolean
@@ -1034,12 +1082,13 @@ export type ExamSelectScalar = {
   totalCorrect?: boolean
   totalWrong?: boolean
   totalSkipped?: boolean
+  earnedPoints?: boolean
   timeLimit?: boolean
   startedAt?: boolean
   completedAt?: boolean
 }
 
-export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "packageId" | "mode" | "score" | "totalCorrect" | "totalWrong" | "totalSkipped" | "timeLimit" | "startedAt" | "completedAt", ExtArgs["result"]["exam"]>
+export type ExamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "packageId" | "mode" | "score" | "totalCorrect" | "totalWrong" | "totalSkipped" | "earnedPoints" | "timeLimit" | "startedAt" | "completedAt", ExtArgs["result"]["exam"]>
 export type ExamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   package?: boolean | Prisma.PackageDefaultArgs<ExtArgs>
@@ -1071,6 +1120,7 @@ export type $ExamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     totalCorrect: number | null
     totalWrong: number | null
     totalSkipped: number | null
+    earnedPoints: number | null
     timeLimit: number
     startedAt: Date
     completedAt: Date | null
@@ -1508,6 +1558,7 @@ export interface ExamFieldRefs {
   readonly totalCorrect: Prisma.FieldRef<"Exam", 'Int'>
   readonly totalWrong: Prisma.FieldRef<"Exam", 'Int'>
   readonly totalSkipped: Prisma.FieldRef<"Exam", 'Int'>
+  readonly earnedPoints: Prisma.FieldRef<"Exam", 'Int'>
   readonly timeLimit: Prisma.FieldRef<"Exam", 'Int'>
   readonly startedAt: Prisma.FieldRef<"Exam", 'DateTime'>
   readonly completedAt: Prisma.FieldRef<"Exam", 'DateTime'>

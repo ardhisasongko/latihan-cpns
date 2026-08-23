@@ -29,6 +29,8 @@ model Question {
   question          String
   options           String
   correctAnswer     String
+  // JSON {"A":5,"B":3,...} bobot opsi 1-5 khusus TKP; null = skoring biner.
+  optionWeights     String?
   explanation       String
   explanationSource String
   examAnswers       ExamAnswer[]
@@ -71,6 +73,8 @@ model Exam {
   totalCorrect Int?
   totalWrong   Int?
   totalSkipped Int?
+  // Total poin terkumpul (Σ ExamAnswer.score) — untuk skoring berbobot TKP.
+  earnedPoints Int?
   timeLimit    Int
   startedAt    DateTime     @default(now())
   completedAt  DateTime?
