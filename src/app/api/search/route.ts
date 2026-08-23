@@ -1,8 +1,14 @@
 import { db } from "@/lib/db";
+import { auth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/lib/rateLimit";
 
 export async function GET(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   // Rate limiting: 20 requests per minute per IP
   try {
     await rateLimit(request);

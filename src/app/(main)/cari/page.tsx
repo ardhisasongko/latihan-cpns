@@ -36,6 +36,11 @@ export default function CariPage() {
         setResults([]);
         return;
       }
+      if (res.status === 401) {
+        setError("Sesi berakhir. Muat ulang halaman untuk login kembali.");
+        setResults([]);
+        return;
+      }
       if (!res.ok) {
         setError("Terjadi kesalahan, coba lagi.");
         setResults([]);

@@ -18,6 +18,8 @@ export function proxy(request: NextRequest) {
     "font-src 'self' https:",
     "connect-src 'self' https:",
     "frame-src 'self'",
+    // Cegah situs lain meng-embed aplikasi ini (clickjacking).
+    "frame-ancestors 'self'",
     "object-src 'none'",
     "base-uri 'self'",
   ].join("; ");

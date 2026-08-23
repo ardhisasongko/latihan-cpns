@@ -25,6 +25,27 @@ npm run dev                  # http://localhost:3000
 npx tsx prisma/seed.ts        # isi data soal dari prisma/seed-*.ts
 ```
 
+## Migration Schema (D1)
+
+Struktur `prisma/migrations` (folder + `migration.sql`) tidak bisa dibaca `wrangler d1 migrations apply` — wrangler butuh file `.sql` flat di folder `migrations/`. Alur setiap mengubah `prisma/schema.prisma`:
+
+```bash
+# 1. Buat migration Prisma (ter-commit di prisma/migrations/)
+npx prisma migrate dev --name <deskripsi_singkat>
+
+# 2. Salin SQL-nya ke migrations/ untuk wrangler
+cp prisma/migrations/<timestamp>_<nama>/migration.sql migrations/<timestamp>_<nama>.sql
+
+# 3. Apply ke D1 remote SEBELUM deploy
+npx wrangler d1 migrations apply latihan-cpns --remote
+
+# 4. Baru build & deploy
+npx opennextjs-cloudflare build && npx wrangler deploy
+```
+
+Untuk D1 lokal (`wrangler dev`), langkah 3 tanpa `--remote`.
+Catatan: jika DB prod pernah dibuat tanpa wrangler migrations, cek dulu `npx wrangler d1 migrations list latihan-cpns --remote` — baseline manual mungkin diperlukan agar init tidak dijalankan ulang.
+
 ## Deploy ke Cloudflare Workers
 
 ```bash
