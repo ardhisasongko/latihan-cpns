@@ -71,7 +71,14 @@ export function ExamInterface({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+
+  // Serialisasi simpan jawaban: klik cepat A->B harus tersimpan urut
+  // (request paralel bisa tiba acak dan nilai stale menimpa yang terakhir).
+  const saveQueue = useRef<Promise<void>>(Promise.resolve());
+  const pendingSaves = useRef(0);
+  const saveErrorTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentQuestion = questions[currentIndex];
   const progress = ((currentIndex + 1) / questions.length) * 100;
@@ -119,9 +126,18 @@ export function ExamInterface({
 
     // Simpan ke server agar tidak hilang saat refresh
     setIsSaving(true);
-    onSaveAnswer(questionId, answer)
-      .catch(() => alert("Gagal menyimpan jawaban. Periksa koneksi internet Anda."))
-      .finally(() => setIsSaving(false));
+    pendingSaves.current += 1;
+    saveQueue.current = saveQueue.current
+      .then(() => onSaveAnswer(questionId, answer))
+      .catch(() => {
+        setSaveError("Gagal menyimpan jawaban. Periksa koneksi internet Anda.");
+        if (saveErrorTimer.current) clearTimeout(saveErrorTimer.current);
+        saveErrorTimer.current = setTimeout(() => setSaveError(""), 4000);
+      })
+      .finally(() => {
+        pendingSaves.current -= 1;
+        if (pendingSaves.current === 0) setIsSaving(false);
+      });
   };
 
   const handleToggleBookmark = async (questionId: string) => {
@@ -154,6 +170,45 @@ export function ExamInterface({
     // Waktu habis → submit otomatis; via ref agar effect tidak bergantung pada handleSubmit
     if (isTimeUp) handleSubmitRef.current();
   }, [isTimeUp]);
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!showSubmitConfirm) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    // Fokus masuk ke tombol pertama di dalam dialog
+    dialogRef.current?.querySelectorAll("button")[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowSubmitConfirm(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      // Focus trap: Tab tertahan di dalam dialog
+      const buttons = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>("button") ?? []
+      );
+      if (buttons.length === 0) return;
+      const first = buttons[0];
+      const last = buttons[buttons.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+      previouslyFocused?.focus();
+    };
+  }, [showSubmitConfirm]);
 
   const answeredCount = Object.keys(answers).filter((qId) => answers[qId])
     .length;
@@ -192,6 +247,15 @@ export function ExamInterface({
           </span>
         </div>
       </div>
+
+      {saveError && (
+        <div
+          role="alert"
+          className="bg-danger/10 border border-danger/30 text-danger text-sm rounded-lg px-4 py-3 mb-6"
+        >
+          {saveError}
+        </div>
+      )}
 
       {/* Question navigation dots */}
       <div className="flex flex-wrap gap-1.5 mb-6">
@@ -364,9 +428,22 @@ export function ExamInterface({
 
       {/* Submit confirmation modal */}
       {showSubmitConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card border border-border rounded-xl p-6 max-w-md mx-4">
-            <h2 className="text-lg font-bold mb-2">Konfirmasi Submit</h2>
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowSubmitConfirm(false);
+          }}
+        >
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="submit-confirm-title"
+            className="bg-card border border-border rounded-xl p-6 max-w-md mx-4"
+          >
+            <h2 id="submit-confirm-title" className="text-lg font-bold mb-2">
+              Konfirmasi Submit
+            </h2>
             <p className="text-muted-foreground mb-4">
               Kamu telah menjawab {answeredCount} dari {questions.length} soal.
               {answeredCount < questions.length &&
