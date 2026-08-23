@@ -88,7 +88,7 @@ export default async function ExamPage({
 
     const exam = await db.exam.findUnique({
       where: { id: examId, userId: session.user.id },
-      select: { completedAt: true, startedAt: true, timeLimit: true, package: { select: { category: true } } },
+      select: { completedAt: true, startedAt: true, timeLimit: true, packageId: true, package: { select: { category: true } } },
     });
     if (!exam || exam.completedAt) return;
 
@@ -97,20 +97,25 @@ export default async function ExamPage({
       return;
     }
 
-    const question = await db.question.findUnique({
-      where: { id: questionId },
-      select: { correctAnswer: true, category: true },
-    });
-    if (!question) return;
+    // Payload harus pilihan A-E dan soalnya milik paket exam ini.
+    if (!/^[A-E]$/.test(answer)) return;
 
-    const isCorrect = answer === question.correctAnswer;
+    const pq = await db.packageQuestion.findUnique({
+      where: {
+        packageId_questionId: { packageId: exam.packageId, questionId },
+      },
+      include: { question: { select: { correctAnswer: true, category: true } } },
+    });
+    if (!pq) return;
+
+    const isCorrect = answer === pq.question.correctAnswer;
 
     await db.examAnswer.upsert({
       where: { examId_questionId: { examId, questionId } },
       update: {
         selectedAnswer: answer,
         isCorrect,
-        score: isCorrect ? pointsFor(question.category) : 0,
+        score: isCorrect ? pointsFor(pq.question.category) : 0,
         answeredAt: new Date(),
       },
       create: {
@@ -118,7 +123,7 @@ export default async function ExamPage({
         questionId,
         selectedAnswer: answer,
         isCorrect,
-        score: isCorrect ? pointsFor(question.category) : 0,
+        score: isCorrect ? pointsFor(pq.question.category) : 0,
       },
     });
   }

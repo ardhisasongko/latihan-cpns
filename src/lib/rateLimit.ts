@@ -1,7 +1,7 @@
-// WARNING: Simple in-memory rate limiter.
-// Ini hanya cocok untuk demo atau environment single-instance.
-// Di production dengan Cloudflare Workers / multi-instance, memori ini tidak terbagi antar instance.
-// Sebaiknya gunakan Redis (Upstash) atau Cloudflare KV/Rate Limiting untuk skala produksi.
+// WARNING: limiter in-memory di bawah hanya fallback dev/test.
+// Production memakai Cloudflare Rate Limiting binding (lihat rateLimitAuth).
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+
 type RateLimitInfo = {
   count: number;
   resetTime: number; // epoch ms
@@ -67,9 +67,28 @@ export async function rateLimit(request: Request, options: { limit?: number; win
   info.count += 1;
 }
 
-// Limiter khusus endpoint sensitif (login/register): lebih ketat dari default.
-// Key-nya kombinasi IP + email supaya serangan ke satu akun tidak mengunci semua user.
+// Limiter khusus endpoint sensitif (login/register).
+// Production: Cloudflare Rate Limiting binding — counter terdistribusi lintas
+// isolate per lokasi, jadi tidak bisa di-reset dengan spawn isolate baru.
+// Platform membatasi period 10/60 detik -> policy efektif 5x/menit.
+// Butuh window lebih panjang (mis. 5x/5 menit)? Naikkan ke counter D1.
+// next dev / vitest: fallback in-memory di bawah.
 export async function rateLimitAuth(requestKey: string, options: { limit?: number; windowMs?: number } = {}) {
+  let limiter: { limit(opts: { key: string }): Promise<{ success: boolean }> } | undefined;
+  try {
+    const { env } = getCloudflareContext();
+    limiter = (env as unknown as Record<string, unknown>).AUTH_RATE_LIMITER as typeof limiter;
+  } catch {
+    // Tanpa context Cloudflare (next dev / vitest) -> pakai fallback.
+  }
+
+  if (limiter) {
+    const { success } = await limiter.limit({ key: requestKey });
+    if (!success) throw new Error("Rate limit exceeded");
+    return;
+  }
+
+  // Fallback single-instance (dev/test): perilaku lama dipertahankan.
   const { limit = 5, windowMs: wMs = 5 * 60 * 1000 } = options;
   const now = Date.now();
   let info = ipMap.get(requestKey);

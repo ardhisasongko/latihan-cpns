@@ -76,14 +76,11 @@ Prioritas: **P0** = kerjakan sekarang (keamanan/korektness) · **P1** = sprint i
 
 ### EPIC 3 — Hardening Backend (P1)
 
-#### T3.1 Rate limit terdistribusi untuk endpoint sensitif
+#### T3.1 Rate limit terdistribusi untuk endpoint sensitif ✅
 - **Masalah:** `Map` in-memory hidup per-isolate Worker; isolate baru = counter reset. Limit "5×/5 mnt" efektif jadi jauh lebih longgar; brute-force login masih mungkin.
-- **File:** `src/lib/rateLimit.ts`, `wrangler.jsonc`
-- **Task:**
-  - [ ] Pilih mekanisme native Cloudflare: **Rate Limiting binding** (paling sederhana) atau counter D1/KV dengan TTL.
-  - [ ] Terapkan pada `rateLimitAuth` (login/register). Rate limit umum search boleh tetap in-memory (dampak rendah).
-  - [ ] Hapus fallback Map untuk path auth setelah binding aktif.
-- **Acceptance:** 6 percobaan login salah dalam 5 menit dari IP sama → percobaan ke-6 ditolak meski lintas isolate/restart.
+- **Implementasi:** Cloudflare **Rate Limiting binding** (`AUTH_RATE_LIMITER`, wrangler.jsonc) untuk login/register — counter terdistribusi lintas isolate per lokasi. Fallback in-memory hanya untuk `next dev`/vitest.
+- **Catatan platform:** period binding dibatasi Cloudflare maksimal 60 detik → policy efektif **5×/menit per IP+email**, bukan 5×/5 menit seperti desain awal. Untuk window lebih panjang, upgrade path: counter D1 dengan TTL.
+- **Status:** selesai (Sprint 3).
 
 #### T3.2 Validasi payload `saveAnswer`
 - **Masalah:** Action menerima `questionId` dan jawaban string apa pun tanpa validasi keanggotaan paket / pilihan A–E. Dampak kecil (submit membangun ulang dari paket), tapi data sampah bisa masuk tabel `ExamAnswer`.

@@ -32,6 +32,20 @@ export default async function PackageDetailPage({
     // 60 detik per soal, sesuai proporsi ujian SKD asli (100 soal / 100 menit)
     const timeLimit = mode === "ujian" ? currentPkg.totalQuestions * 60 : 0;
 
+    // Reuse draft yang belum selesai utk paket+mode sama —
+    // cegah penumpukan exam orphan dari klik tombol berulang.
+    const draft = await db.exam.findFirst({
+      where: {
+        userId: session.user.id,
+        packageId: currentPkg.id,
+        mode,
+        completedAt: null,
+      },
+    });
+    if (draft) {
+      redirect(`/kerjakan/${draft.id}`);
+    }
+
     const exam = await db.exam.create({
       data: {
         userId: session.user.id,
