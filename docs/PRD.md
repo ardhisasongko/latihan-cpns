@@ -105,19 +105,13 @@ Prioritas: **P0** = kerjakan sekarang (keamanan/korektness) · **P1** = sprint i
 
 ---
 
-### EPIC 4 — Akurasi Domain: Skor TKP Berbobot (P2)
+### EPIC 4 — Akurasi Domain: Skor TKP Berbobot (P2) ✅
 
-#### T4.1 Implementasi bobot opsi 1–5 untuk TKP
-- **Masalah:** Ujian TKP asli menilai tiap opsi berbobot 1–5 (tidak ada "salah"). Aplikasi memperlakukan TKP biner (+3 jika kunci cocok) → simulasi skor menyesatkan.
-- **File:** `prisma/schema.prisma`, `prisma/migrations/*`, `src/lib/scoring.ts`, seed TKP, `ExamInterface.tsx`, halaman hasil/pembahasan
-- **Task:**
-  - [ ] Schema: tambah kolom `optionWeights String` (JSON `{A:3,B:5,...}`) di `Question` (nullable — TWK/TIU tak pakai).
-  - [ ] Migration D1 + backfill data seed TKP dengan bobot wajar.
-  - [ ] Scoring: agregasi `sum(weight[selected])`; `maxScore` = Σ max weight; passing grade proporsional.
-  - [ ] Mode belajar: setelah pilih, tampilkan bobot opsi terpilih + opsi berbobot tertinggi sebagai "paling tepat".
-  - [ ] Hasil/riwayat: skor TKP pakai total poin bobot, bukan jumlah benar.
-- **Acceptance:** Paket TKP 45 soal menghasilkan skor maksimum 225; jawaban "kedua terbaik" memberi poin parsial; TWK/TIU tidak berubah.
-- **Catatan:** Epik terbesar — pecah jadi PR terpisah: (a) schema+migration+backfill, (b) scoring engine + test, (c) UI.
+#### T4.1 Implementasi bobot opsi 1–5 untuk TKP ✅
+- **Status:** selesai (Sprint 4, 3 commit: schema → engine → UI).
+- **Implementasi:** `Question.optionWeights` (JSON A–E), `Exam.earnedPoints`, `parseWeights/tkpScore/answerScore/weightedExamResult`, fallback biner otomatis utk soal/data lama, feedback belajar mode menampilkan bobot & opsi terbaik.
+- **Catatan bobot seed:** deterministik 5/3/2/2/1 dari kunci jawaban (seed hanya punya satu jawaban "terbaik" per soal); manualisasi bobot per opsi menyusul bila perlu.
+- **Deploy wajib:** `wrangler d1 migrations apply latihan-cpns --remote` lalu re-seed D1 dengan SQL terbaru (`gen-seed-sql.ts`) agar TKP produksi berbobot.
 
 ---
 
